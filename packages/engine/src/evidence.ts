@@ -31,7 +31,7 @@ export interface EvidenceCheckResult {
   injectionFlagged: boolean;
   flaggedReasons: string[];
   injectionDetails?: {
-    flaggedSpan: string;
+    flaggedSpan?: string;
     score: number;
   };
 }
