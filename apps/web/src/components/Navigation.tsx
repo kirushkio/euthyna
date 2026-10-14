@@ -15,6 +15,8 @@ import {
   CheckCircle2
 } from 'lucide-react';
 
+import { WalletButton } from './WalletButton';
+
 export const Navigation: React.FC = () => {
   const pathname = usePathname();
 
@@ -71,14 +73,17 @@ export const Navigation: React.FC = () => {
           })}
         </nav>
 
-        {/* Right Info Pill */}
-        <div className="flex items-center gap-2 text-xs font-mono">
+        {/* Right Info Pill & Wallet Connection */}
+        <div className="flex items-center gap-2.5 text-xs font-mono">
           <div className="hidden lg:flex items-center gap-1.5 px-2.5 py-1 rounded bg-gray-900 border border-gray-800 text-gray-300">
             <span className="text-gray-500">Gas:</span>
-            <span className="text-emerald-400">Sponsored (Circle Gas Station)</span>
+            <span className="text-emerald-400">Sponsored</span>
           </div>
+
+          <WalletButton />
         </div>
       </div>
     </header>
   );
 };
+
