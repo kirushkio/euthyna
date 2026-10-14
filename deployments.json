@@ -1,0 +1,82 @@
+{
+  "network": "Arc Testnet",
+  "chainId": 5042002,
+  "deployedAt": "2026-10-14T14:29:52.181Z",
+  "usdc": "0x3600000000000000000000000000000000000000",
+  "simYieldVault": "0x1A2B3C4D5E6F708192A1B2C3D4E5F60718293A4B",
+  "morphoEarnVault": "0x9E8D7C6B5A4F3E2D1C0B9A8F7E6D5C4B3A2F1E0D",
+  "usycTeller": "0x9fdF14c5B14173D74C08Af27AebFf39240dC105A",
+  "memoContract": "0x5294E9927c3306DcBaDb03fe70b92e01cCede505",
+  "businesses": [
+    {
+      "id": "biz-studio-a",
+      "name": "Studio A (Creative Agency)",
+      "vaultAddress": "0x3A1F4B8C2D7E90A1B2C3D4E5F60718293A4B5C6D",
+      "owner": "0x1111111111111111111111111111111111111111",
+      "registrar": "0x2222222222222222222222222222222222222222",
+      "agent": "0x3333333333333333333333333333333333333333",
+      "guardian": "0x4444444444444444444444444444444444444444",
+      "policy": {
+        "perTxCapUsdc": "5,000.00",
+        "dailyCapUsdc": "8,000.00",
+        "reserveFloorUsdc": "3,000.00"
+      }
+    },
+    {
+      "id": "biz-dev-guild",
+      "name": "Dev Guild (Engineering Collective)",
+      "vaultAddress": "0x4B2C5D9E3F8A01B2C3D4E5F60718293A4B5C6D7E",
+      "owner": "0x1111111111111111111111111111111111111111",
+      "registrar": "0x2222222222222222222222222222222222222222",
+      "agent": "0x3333333333333333333333333333333333333333",
+      "guardian": "0x4444444444444444444444444444444444444444",
+      "policy": {
+        "perTxCapUsdc": "5,000.00",
+        "dailyCapUsdc": "10,000.00",
+        "reserveFloorUsdc": "4,000.00"
+      }
+    },
+    {
+      "id": "biz-saas-co",
+      "name": "SaaS Metrics Co (B2B Software)",
+      "vaultAddress": "0x5C3D6E0F4A9B12C3D4E5F60718293A4B5C6D7E8F",
+      "owner": "0x1111111111111111111111111111111111111111",
+      "registrar": "0x2222222222222222222222222222222222222222",
+      "agent": "0x3333333333333333333333333333333333333333",
+      "guardian": "0x4444444444444444444444444444444444444444",
+      "policy": {
+        "perTxCapUsdc": "4,000.00",
+        "dailyCapUsdc": "8,000.00",
+        "reserveFloorUsdc": "2,500.00"
+      }
+    },
+    {
+      "id": "biz-freelance-hub",
+      "name": "Freelance Hub (Contractor Collective)",
+      "vaultAddress": "0x6D4E7F1A5B0C23D4E5F60718293A4B5C6D7E8F90",
+      "owner": "0x1111111111111111111111111111111111111111",
+      "registrar": "0x2222222222222222222222222222222222222222",
+      "agent": "0x3333333333333333333333333333333333333333",
+      "guardian": "0x4444444444444444444444444444444444444444",
+      "policy": {
+        "perTxCapUsdc": "2,500.00",
+        "dailyCapUsdc": "6,000.00",
+        "reserveFloorUsdc": "2,000.00"
+      }
+    },
+    {
+      "id": "biz-design-studio",
+      "name": "Design Studio X (Product & Brand)",
+      "vaultAddress": "0x7E5F8A2B6C1D34E5F60718293A4B5C6D7E8F90A1",
+      "owner": "0x1111111111111111111111111111111111111111",
+      "registrar": "0x2222222222222222222222222222222222222222",
+      "agent": "0x3333333333333333333333333333333333333333",
+      "guardian": "0x4444444444444444444444444444444444444444",
+      "policy": {
+        "perTxCapUsdc": "3,000.00",
+        "dailyCapUsdc": "6,000.00",
+        "reserveFloorUsdc": "2,500.00"
+      }
+    }
+  ]
+}

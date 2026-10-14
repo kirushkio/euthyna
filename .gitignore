@@ -1,0 +1,12 @@
+node_modules/
+.next/
+out/
+dist/
+cache/
+artifacts/
+broadcast/
+.env
+.env.local
+.DS_Store
+*.log
+coverage/

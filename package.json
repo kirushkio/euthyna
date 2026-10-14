@@ -1,0 +1,23 @@
+{
+  "name": "euthyna-treasury-monorepo",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Euthyna Treasury: AI treasurer for small businesses settled on Arc in USDC",
+  "scripts": {
+    "build": "pnpm -r --filter=!apps/web run build && pnpm --filter=@euthyna/web build",
+    "test": "vitest run",
+    "bench": "tsx scripts/bench.ts",
+    "deploy:arc": "tsx scripts/deploy.ts",
+    "seed": "tsx scripts/seed.ts",
+    "volume": "tsx scripts/volume.ts",
+    "traction": "tsx scripts/traction.ts",
+    "dev": "pnpm --filter=@euthyna/web dev"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2",
+    "vitest": "^2.1.8"
+  },
+  "packageManager": "pnpm@12.11.2"
+}

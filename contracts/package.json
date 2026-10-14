@@ -1,0 +1,12 @@
+{
+  "name": "@euthyna/contracts",
+  "version": "1.0.0",
+  "description": "EuthynaVault and yield adapters for Arc Testnet",
+  "scripts": {
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "viem": "^2.21.57",
+    "vitest": "^2.1.8"
+  }
+}
