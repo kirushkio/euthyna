@@ -17,14 +17,10 @@ import {
   FileText,
   Shield,
   Zap,
-  Coins,
-  ArrowUpRight,
-  Send,
 } from 'lucide-react';
 import { useWallet } from '../../context/WalletContext';
 import {
   getBrowserWalletClient,
-  getPublicClient,
   readVaultState,
   executeApprovePayee,
   executeRevokePayee,
@@ -188,30 +184,8 @@ export default function ApprovalsPage() {
     refreshVault();
   }, [primaryVaultAddress]);
 
-  // Live Onchain USDC Transfer State
-  const [liveAmount, setLiveAmount] = useState('1.00');
-  const [liveMode, setLiveMode] = useState<'deposit_vault' | 'direct_payee'>('deposit_vault');
-  const [customPayee, setCustomPayee] = useState('0x71C8364675A74F674482bC9D40455b2E8B991f24');
+  // Live Onchain USDC Payment State
   const [isExecutingLiveTx, setIsExecutingLiveTx] = useState(false);
-  const [walletBalanceUsdc, setWalletBalanceUsdc] = useState<string | null>(null);
-
-  const fetchWalletBalance = async () => {
-    if (!address) {
-      setWalletBalanceUsdc(null);
-      return;
-    }
-    try {
-      const publicClient = getPublicClient();
-      const bal = await publicClient.getBalance({ address: address as Address });
-      setWalletBalanceUsdc((Number(bal) / 1e18).toFixed(4));
-    } catch (e) {
-      console.warn('Failed to fetch wallet balance:', e);
-    }
-  };
-
-  useEffect(() => {
-    fetchWalletBalance();
-  }, [address]);
 
   useEffect(() => {
     try {
@@ -253,10 +227,9 @@ export default function ApprovalsPage() {
   };
 
   const handleExecuteLiveTransfer = async (
-    targetRecipient?: Address,
-    targetAmount?: string,
-    modeOverride?: 'deposit_vault' | 'direct_payee',
-    sourceItemId?: string
+    targetRecipient: Address,
+    targetAmount: string,
+    sourceItemId: string
   ) => {
     if (!isConnected || !address) {
       setErrorMsg('Please connect your MetaMask wallet first.');
@@ -268,83 +241,46 @@ export default function ApprovalsPage() {
       return;
     }
 
-    const amt = targetAmount || liveAmount;
-    const num = parseFloat(amt);
-    if (isNaN(num) || num < 1.0) {
-      setErrorMsg('Transaction amount must be at least 1.00 USDC.');
-      return;
-    }
-
-    const mode = modeOverride || liveMode;
-    let recipient: Address;
-    try {
-      recipient = targetRecipient || (mode === 'deposit_vault' ? primaryVaultAddress : (getAddress(customPayee.trim().toLowerCase()) as Address));
-    } catch {
-      setErrorMsg('Invalid recipient address. Please check 0x format.');
-      return;
-    }
-
     try {
       setIsExecutingLiveTx(true);
       setErrorMsg(null);
       setTxState({
-        itemId: sourceItemId || 'live-tx',
+        itemId: sourceItemId,
         status: 'prompting',
-        msg: `Confirm ${amt} USDC live transaction in MetaMask...`
+        msg: `Confirm ${targetAmount} USDC live payment in MetaMask...`
       });
 
-      const res = await executeLiveUsdcTransfer(walletClient, address as Address, recipient, amt, mode);
+      const res = await executeLiveUsdcTransfer(walletClient, address as Address, targetRecipient, targetAmount, 'direct_payee');
 
       setTxState({
-        itemId: sourceItemId || 'live-tx',
+        itemId: sourceItemId,
         status: 'confirmed',
         txHash: res.hash,
-        msg: `Success! ${amt} USDC confirmed on Arc Testnet block #${res.blockNumber}`
+        msg: `Success! ${targetAmount} USDC confirmed on Arc Testnet block #${res.blockNumber}`
       });
 
-      if (sourceItemId) {
-        setItems(prev =>
-          prev.map(item =>
-            item.id === sourceItemId
-              ? {
-                  ...item,
-                  status: 'APPROVED',
-                  approvedBy: `${address.slice(0, 6)}...${address.slice(-4)}`,
-                  txHash: res.hash,
-                  isRealTx: true,
-                  blockNumber: Number(res.blockNumber)
-                }
-              : item
-          )
-        );
-      } else {
-        const confirmedItem: EscalatedItem = {
-          id: `tx-${Date.now().toString().slice(-4)}`,
-          businessName: mode === 'deposit_vault' ? 'Euthyna Treasury Vault' : 'Live Counterparty',
-          simulatedDay: 17,
-          actionType: mode === 'deposit_vault' ? 'VAULT_RESERVE_DEPOSIT' : 'LIVE_USDC_DISBURSAL',
-          amountUsdc: parseFloat(amt).toFixed(2),
-          vendor: mode === 'deposit_vault' ? 'Euthyna Vault Deposit' : 'Payee Disbursal',
-          payeeAddress: recipient,
-          reason: `${amt} USDC live onchain transaction executed directly from connected MetaMask wallet.`,
-          agentCalculus: `Live transaction verified on Arc Testnet block #${res.blockNumber}. Gas used: ${res.receipt.gasUsed?.toString() || 'standard'}.`,
-          status: 'APPROVED',
-          approvedBy: `${address.slice(0, 6)}...${address.slice(-4)}`,
-          txHash: res.hash,
-          isRealTx: true,
-          blockNumber: Number(res.blockNumber)
-        };
-        setItems(prev => [confirmedItem, ...prev]);
-      }
+      setItems(prev =>
+        prev.map(item =>
+          item.id === sourceItemId
+            ? {
+                ...item,
+                status: 'APPROVED',
+                approvedBy: `${address.slice(0, 6)}...${address.slice(-4)}`,
+                txHash: res.hash,
+                isRealTx: true,
+                blockNumber: Number(res.blockNumber)
+              }
+            : item
+        )
+      );
 
       await refreshVault();
-      await fetchWalletBalance();
 
       setTimeout(() => {
         setTxState({ itemId: null, status: 'idle' });
-      }, 15000);
+      }, 12000);
     } catch (err: any) {
-      console.error('Live transfer failed:', err);
+      console.error('Live payment failed:', err);
       const isRejection = err?.message?.includes('User rejected') || err?.code === 4001;
       setErrorMsg(isRejection ? 'Transaction rejected in MetaMask.' : `Transaction failed: ${err?.shortMessage || err?.message || 'Unknown error'}`);
       setTxState({ itemId: null, status: 'idle' });
@@ -563,182 +499,6 @@ export default function ApprovalsPage() {
             <span>{vaultState?.paused ? 'Unpause' : 'Emergency Pause'}</span>
           </button>
         </div>
-      </div>
-
-      {/* ── Live On-Chain Transaction Execution (Min 1.00 USDC) ── */}
-      <div
-        className="p-5 sm:p-6 rounded-2xl relative overflow-hidden"
-        style={{
-          background: 'linear-gradient(135deg, rgba(20,26,39,0.95) 0%, rgba(16,21,34,0.98) 100%)',
-          border: '1px solid rgba(139,92,246,0.30)',
-          boxShadow: '0 8px 32px rgba(0,0,0,0.4), 0 0 24px rgba(139,92,246,0.10)'
-        }}
-      >
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4 pb-3" style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
-          <div className="flex items-center gap-2.5">
-            <div
-              className="p-2 rounded-xl flex items-center justify-center"
-              style={{ background: 'rgba(139,92,246,0.15)', border: '1px solid rgba(139,92,246,0.30)' }}
-            >
-              <Zap className="w-4 h-4 text-violet-400" />
-            </div>
-            <div>
-              <div className="flex items-center gap-2">
-                <h3 className="text-sm font-bold" style={{ color: '#F0F4FF' }}>
-                  Live On-Chain Transaction Execution
-                </h3>
-                <span
-                  className="px-2 py-0.5 rounded-full text-[10px] font-bold font-mono tracking-wide"
-                  style={{ background: 'rgba(34,211,238,0.12)', color: '#22D3EE', border: '1px solid rgba(34,211,238,0.25)' }}
-                >
-                  MIN 1.00 USDC
-                </span>
-              </div>
-              <p className="text-xs mt-0.5" style={{ color: '#8B95B0' }}>
-                Broadcast live transactions from your MetaMask wallet to Arc Testnet. Verifiable on ArcScan Explorer.
-              </p>
-            </div>
-          </div>
-
-          {/* Wallet Balance Badge */}
-          <div
-            className="flex items-center gap-2 px-3 py-1.5 rounded-xl text-xs self-start sm:self-auto shrink-0"
-            style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)' }}
-          >
-            <Coins className="w-3.5 h-3.5 text-emerald-400" />
-            <span style={{ color: '#8B95B0' }}>Wallet Balance:</span>
-            <span className="font-bold font-mono text-emerald-400">
-              {walletBalanceUsdc ? `${walletBalanceUsdc} USDC` : isConnected ? 'Loading...' : 'Not Connected'}
-            </span>
-          </div>
-        </div>
-
-        {/* Inputs & Controls */}
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-3 items-end">
-          {/* Amount input & presets */}
-          <div className="md:col-span-4 space-y-1.5">
-            <label className="text-[11px] font-semibold flex items-center justify-between" style={{ color: '#8B95B0' }}>
-              <span>Amount (Minimum 1.00 USDC)</span>
-              <span className="font-mono text-[10px]" style={{ color: '#22D3EE' }}>Settled in USDC</span>
-            </label>
-            <div className="relative">
-              <input
-                type="number"
-                min="1.00"
-                step="0.01"
-                value={liveAmount}
-                onChange={(e) => setLiveAmount(e.target.value)}
-                className="w-full px-3 py-2 pr-16 rounded-xl text-xs font-mono font-bold focus:outline-none"
-                style={{ background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.12)', color: '#F0F4FF' }}
-                placeholder="1.00"
-              />
-              <span className="absolute right-3 top-2 text-xs font-bold font-mono" style={{ color: '#8B5CF6' }}>
-                USDC
-              </span>
-            </div>
-            <div className="flex items-center gap-1.5 pt-0.5">
-              {['1.00', '2.50', '5.00', '10.00'].map((preset) => (
-                <button
-                  key={preset}
-                  type="button"
-                  onClick={() => setLiveAmount(preset)}
-                  className="px-2 py-0.5 rounded text-[10px] font-mono transition-all hover:scale-105"
-                  style={
-                    liveAmount === preset
-                      ? { background: 'rgba(139,92,246,0.25)', color: '#A78BFA', border: '1px solid rgba(139,92,246,0.4)' }
-                      : { background: 'rgba(255,255,255,0.04)', color: '#8B95B0', border: '1px solid rgba(255,255,255,0.08)' }
-                  }
-                >
-                  {preset}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Mode & Target selector */}
-          <div className="md:col-span-5 space-y-1.5">
-            <label className="text-[11px] font-semibold" style={{ color: '#8B95B0' }}>
-              Destination Action
-            </label>
-            <div className="grid grid-cols-2 gap-2">
-              <button
-                type="button"
-                onClick={() => setLiveMode('deposit_vault')}
-                className="px-2.5 py-2 rounded-xl text-[11px] font-semibold text-left transition-all"
-                style={
-                  liveMode === 'deposit_vault'
-                    ? { background: 'rgba(139,92,246,0.2)', border: '1px solid #8B5CF6', color: '#F0F4FF' }
-                    : { background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)', color: '#8B95B0' }
-                }
-              >
-                <div className="font-bold flex items-center gap-1">
-                  <Shield className="w-3 h-3 text-violet-400" />
-                  <span>Vault Reserve</span>
-                </div>
-                <div className="text-[9px] mt-0.5 opacity-80 truncate">Backs Treasury Floor</div>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => setLiveMode('direct_payee')}
-                className="px-2.5 py-2 rounded-xl text-[11px] font-semibold text-left transition-all"
-                style={
-                  liveMode === 'direct_payee'
-                    ? { background: 'rgba(34,211,238,0.2)', border: '1px solid #22D3EE', color: '#F0F4FF' }
-                    : { background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)', color: '#8B95B0' }
-                }
-              >
-                <div className="font-bold flex items-center gap-1">
-                  <Send className="w-3 h-3 text-cyan-400" />
-                  <span>Vendor Payee</span>
-                </div>
-                <div className="text-[9px] mt-0.5 opacity-80 truncate">Direct Payee Transfer</div>
-              </button>
-            </div>
-          </div>
-
-          {/* Submit Action Button */}
-          <div className="md:col-span-3">
-            <button
-              type="button"
-              onClick={() => handleExecuteLiveTransfer()}
-              disabled={isExecutingLiveTx || !isConnected}
-              className="w-full py-2.5 px-4 rounded-xl text-xs font-bold text-white transition-all flex items-center justify-center gap-2 active:scale-95 disabled:opacity-40"
-              style={{
-                background: 'linear-gradient(135deg, #8B5CF6 0%, #6D28D9 100%)',
-                boxShadow: '0 0 20px rgba(139,92,246,0.4)',
-              }}
-            >
-              {isExecutingLiveTx ? (
-                <>
-                  <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                  <span>Signing in MetaMask...</span>
-                </>
-              ) : (
-                <>
-                  <ArrowUpRight className="w-4 h-4" />
-                  <span>Execute {parseFloat(liveAmount || '1') >= 1 ? parseFloat(liveAmount).toFixed(2) : '1.00'} USDC</span>
-                </>
-              )}
-            </button>
-          </div>
-        </div>
-
-        {liveMode === 'direct_payee' && (
-          <div className="mt-3 pt-3 space-y-1 text-xs" style={{ borderTop: '1px solid rgba(255,255,255,0.06)' }}>
-            <label className="text-[10px] font-semibold" style={{ color: '#8B95B0' }}>
-              Payee Recipient Address
-            </label>
-            <input
-              type="text"
-              value={customPayee}
-              onChange={(e) => setCustomPayee(e.target.value)}
-              className="w-full px-3 py-1.5 rounded-lg text-xs font-mono focus:outline-none"
-              style={{ background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.10)', color: '#F0F4FF' }}
-              placeholder="0x..."
-            />
-          </div>
-        )}
       </div>
 
       {/* Filter Tabs */}
