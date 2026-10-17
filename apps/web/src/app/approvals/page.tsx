@@ -53,7 +53,7 @@ const INITIAL_APPROVALS: EscalatedItem[] = [
     actionType: 'PAYEE_MODIFICATION',
     amountUsdc: '1,200.00',
     vendor: 'Design Agency Partner',
-    payeeAddress: '0x71C8364675A74F674482BC9D40455B2E8B991F24',
+    payeeAddress: '0x71C8364675A74F674482bC9D40455b2E8B991f24',
     reason: 'Payee address was updated recently. Active cooldown requires explicit Owner confirmation.',
     agentCalculus: 'A 2% discount ($24.00) expires today, but the vendor payout address was changed. Per Rule G3, modified addresses require Owner confirmation to protect against Business Email Compromise (BEC).',
     status: 'PENDING'
@@ -65,7 +65,7 @@ const INITIAL_APPROVALS: EscalatedItem[] = [
     actionType: 'THREE_WAY_MATCH_OVERRIDE',
     amountUsdc: '2,200.00',
     vendor: 'Hardware Supplier Ltd',
-    payeeAddress: '0x82D9475765B84F674482BC9D40455B2E8B992A35',
+    payeeAddress: '0x82D9475765b84F674482BC9d40455B2e8B992a35',
     reason: 'Three-way match incomplete: warehouse physical goods receipt has not yet been attested.',
     agentCalculus: 'Invoice received for physical server hardware, but delivery attestation receipt is missing. Agent escalated with extension request draft instead of disbursing blind payment.',
     status: 'PENDING'

@@ -6,6 +6,7 @@ import {
   fallback,
   defineChain,
   parseAbi,
+  getAddress,
   type PublicClient,
   type WalletClient,
   type Address,
@@ -229,6 +230,7 @@ export async function executeApprovePayee(
   payeeAddress: Address
 ): Promise<TxResult> {
   const publicClient = getPublicClient();
+  const validPayee = getAddress(payeeAddress.toLowerCase()) as Address;
 
   const hash = await walletClient.writeContract({
     account,
@@ -236,7 +238,7 @@ export async function executeApprovePayee(
     address: vaultAddress,
     abi: EUTHYNA_VAULT_ABI,
     functionName: 'approvePayee',
-    args: [payeeAddress]
+    args: [validPayee]
   });
 
   const receipt = await publicClient.waitForTransactionReceipt({ hash });
@@ -256,6 +258,7 @@ export async function executeRevokePayee(
   payeeAddress: Address
 ): Promise<TxResult> {
   const publicClient = getPublicClient();
+  const validPayee = getAddress(payeeAddress.toLowerCase()) as Address;
 
   const hash = await walletClient.writeContract({
     account,
@@ -263,7 +266,7 @@ export async function executeRevokePayee(
     address: vaultAddress,
     abi: EUTHYNA_VAULT_ABI,
     functionName: 'revokePayee',
-    args: [payeeAddress]
+    args: [validPayee]
   });
 
   const receipt = await publicClient.waitForTransactionReceipt({ hash });
