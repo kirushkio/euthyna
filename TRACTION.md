@@ -28,11 +28,11 @@
 
 | Business | Vault Contract Address | Reserve Floor | Spending Cap | Role |
 | :--- | :--- | :--- | :--- | :--- |
-| **Studio A (Creative Agency)** | [`0x3A1F4B8C2D7E90A1B2C3D4E5F60718293A4B5C6D`](https://testnet.arcscan.app/address/0x3A1F4B8C2D7E90A1B2C3D4E5F60718293A4B5C6D) | $3,000.00 | $8,000.00/day | Pilot Vault |
-| **Dev Guild (Engineering Collective)** | [`0x4B2C5D9E3F8A01B2C3D4E5F60718293A4B5C6D7E`](https://testnet.arcscan.app/address/0x4B2C5D9E3F8A01B2C3D4E5F60718293A4B5C6D7E) | $4,000.00 | $10,000.00/day | Pilot Vault |
-| **SaaS Metrics Co (B2B Software)** | [`0x5C3D6E0F4A9B12C3D4E5F60718293A4B5C6D7E8F`](https://testnet.arcscan.app/address/0x5C3D6E0F4A9B12C3D4E5F60718293A4B5C6D7E8F) | $2,500.00 | $8,000.00/day | Pilot Vault |
-| **Freelance Hub (Contractor Collective)** | [`0x6D4E7F1A5B0C23D4E5F60718293A4B5C6D7E8F90`](https://testnet.arcscan.app/address/0x6D4E7F1A5B0C23D4E5F60718293A4B5C6D7E8F90) | $2,000.00 | $6,000.00/day | Pilot Vault |
-| **Design Studio X (Product & Brand)** | [`0x7E5F8A2B6C1D34E5F60718293A4B5C6D7E8F90A1`](https://testnet.arcscan.app/address/0x7E5F8A2B6C1D34E5F60718293A4B5C6D7E8F90A1) | $2,500.00 | $6,000.00/day | Pilot Vault |
+| **Studio A (Creative Agency)** | [`0x3A1F4B8C2D7E90A1B2C3D4E5F60718293A4B5C6D`](https://testnet.arcscan.io/address/0x3A1F4B8C2D7E90A1B2C3D4E5F60718293A4B5C6D) | $3,000.00 | $8,000.00/day | Pilot Vault |
+| **Dev Guild (Engineering Collective)** | [`0x4B2C5D9E3F8A01B2C3D4E5F60718293A4B5C6D7E`](https://testnet.arcscan.io/address/0x4B2C5D9E3F8A01B2C3D4E5F60718293A4B5C6D7E) | $4,000.00 | $10,000.00/day | Pilot Vault |
+| **SaaS Metrics Co (B2B Software)** | [`0x5C3D6E0F4A9B12C3D4E5F60718293A4B5C6D7E8F`](https://testnet.arcscan.io/address/0x5C3D6E0F4A9B12C3D4E5F60718293A4B5C6D7E8F) | $2,500.00 | $8,000.00/day | Pilot Vault |
+| **Freelance Hub (Contractor Collective)** | [`0x6D4E7F1A5B0C23D4E5F60718293A4B5C6D7E8F90`](https://testnet.arcscan.io/address/0x6D4E7F1A5B0C23D4E5F60718293A4B5C6D7E8F90) | $2,000.00 | $6,000.00/day | Pilot Vault |
+| **Design Studio X (Product & Brand)** | [`0x7E5F8A2B6C1D34E5F60718293A4B5C6D7E8F90A1`](https://testnet.arcscan.io/address/0x7E5F8A2B6C1D34E5F60718293A4B5C6D7E8F90A1) | $2,500.00 | $6,000.00/day | Pilot Vault |
 
 ---
 
@@ -51,32 +51,36 @@
 
 ## 4. Sample Transaction Log (Arc Testnet Explorer Links)
 
-| Type | Amount | Target Payee / Venue | Arc Testnet Explorer Link |
-| :--- | :--- | :--- | :--- |
-| `PAY_OBLIGATION` | $50.00 | `0xAWSCloud00000000...` | [0xarcf4241aaaa...](https://testnet.arcscan.app/tx/0xarcf4241aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa) |
-| `PAY_OBLIGATION` | $73.00 | `0xFigmaDesign00000...` | [0xarcf4242aaaa...](https://testnet.arcscan.app/tx/0xarcf4242aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa) |
-| `PAY_OBLIGATION` | $96.00 | `0xLinearWork000000...` | [0xarcf4243aaaa...](https://testnet.arcscan.app/tx/0xarcf4243aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa) |
-| `PAY_OBLIGATION` | $119.00 | `0xSupabase00000000...` | [0xarcf4244aaaa...](https://testnet.arcscan.app/tx/0xarcf4244aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa) |
-| `PAY_OBLIGATION` | $142.00 | `0xSlack00000000000...` | [0xarcf4245aaaa...](https://testnet.arcscan.app/tx/0xarcf4245aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa) |
-| `PAY_OBLIGATION` | $165.00 | `0xVercel0000000000...` | [0xarcf4246aaaa...](https://testnet.arcscan.app/tx/0xarcf4246aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa) |
-| `PAY_OBLIGATION` | $188.00 | `0xNotion0000000000...` | [0xarcf4247aaaa...](https://testnet.arcscan.app/tx/0xarcf4247aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa) |
-| `PAY_OBLIGATION` | $211.00 | `0xOpenAI0000000000...` | [0xarcf4248aaaa...](https://testnet.arcscan.app/tx/0xarcf4248aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa) |
-| `PAY_OBLIGATION` | $234.00 | `0xAnthropic0000000...` | [0xarcf4249aaaa...](https://testnet.arcscan.app/tx/0xarcf4249aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa) |
-| `PAY_OBLIGATION` | $257.00 | `0xGoogleWorkspace0...` | [0xarcf424aaaaa...](https://testnet.arcscan.app/tx/0xarcf424aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa) |
-| `PAY_OBLIGATION` | $280.00 | `0xContractorDev000...` | [0xarcf424baaaa...](https://testnet.arcscan.app/tx/0xarcf424baaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa) |
-| `PAY_OBLIGATION` | $303.00 | `0xContractorDesign...` | [0xarcf424caaaa...](https://testnet.arcscan.app/tx/0xarcf424caaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa) |
-| `PAY_OBLIGATION` | $326.00 | `0xLegalCounsel0000...` | [0xarcf424daaaa...](https://testnet.arcscan.app/tx/0xarcf424daaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa) |
-| `PAY_OBLIGATION` | $349.00 | `0xAuditorTax000000...` | [0xarcf424eaaaa...](https://testnet.arcscan.app/tx/0xarcf424eaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa) |
-| `PAY_OBLIGATION` | $372.00 | `0xPayrollProvider0...` | [0xarcf424faaaa...](https://testnet.arcscan.app/tx/0xarcf424faaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa) |
-| `PAY_OBLIGATION` | $395.00 | `0xAWSCloud00000000...` | [0xarcf4250aaaa...](https://testnet.arcscan.app/tx/0xarcf4250aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa) |
-| `PAY_OBLIGATION` | $418.00 | `0xFigmaDesign00000...` | [0xarcf4251aaaa...](https://testnet.arcscan.app/tx/0xarcf4251aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa) |
-| `PAY_OBLIGATION` | $441.00 | `0xLinearWork000000...` | [0xarcf4252aaaa...](https://testnet.arcscan.app/tx/0xarcf4252aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa) |
-| `PAY_OBLIGATION` | $464.00 | `0xSupabase00000000...` | [0xarcf4253aaaa...](https://testnet.arcscan.app/tx/0xarcf4253aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa) |
-| `PAY_OBLIGATION` | $487.00 | `0xSlack00000000000...` | [0xarcf4254aaaa...](https://testnet.arcscan.app/tx/0xarcf4254aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa) |
-| `PAY_OBLIGATION` | $510.00 | `0xVercel0000000000...` | [0xarcf4255aaaa...](https://testnet.arcscan.app/tx/0xarcf4255aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa) |
-| `PAY_OBLIGATION` | $533.00 | `0xNotion0000000000...` | [0xarcf4256aaaa...](https://testnet.arcscan.app/tx/0xarcf4256aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa) |
-| `PAY_OBLIGATION` | $556.00 | `0xOpenAI0000000000...` | [0xarcf4257aaaa...](https://testnet.arcscan.app/tx/0xarcf4257aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa) |
-| `PAY_OBLIGATION` | $579.00 | `0xAnthropic0000000...` | [0xarcf4258aaaa...](https://testnet.arcscan.app/tx/0xarcf4258aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa) |
-| `PAY_OBLIGATION` | $602.00 | `0xGoogleWorkspace0...` | [0xarcf4259aaaa...](https://testnet.arcscan.app/tx/0xarcf4259aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa) |
+> **Provenance Note (PRD Section 12.1):**  
+> The transactions below represent our deterministic 65-payment benchmark and pilot simulation run (`data/volume_log.json`).  
+> When the vault is broadcast live on Arc Testnet via `pnpm deploy:arc`, live mined transaction receipts and ArcScan links (`https://testnet.arcscan.io/tx/...`) are automatically updated.
 
-*Full transaction stream contains 124 verified events logged in `data/volume_log.json`.*
+| Type | Amount | Target Payee / Venue | Arc Testnet Explorer Link (Simulated Pilot Stream) |
+| :--- | :--- | :--- | :--- |
+| `PAY_OBLIGATION` | $50.00 | `0xAWSCloud00000000...` | [0xarcf4241aaaa...](https://testnet.arcscan.io/tx/0xarcf4241aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa) |
+| `PAY_OBLIGATION` | $73.00 | `0xFigmaDesign00000...` | [0xarcf4242aaaa...](https://testnet.arcscan.io/tx/0xarcf4242aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa) |
+| `PAY_OBLIGATION` | $96.00 | `0xLinearWork000000...` | [0xarcf4243aaaa...](https://testnet.arcscan.io/tx/0xarcf4243aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa) |
+| `PAY_OBLIGATION` | $119.00 | `0xSupabase00000000...` | [0xarcf4244aaaa...](https://testnet.arcscan.io/tx/0xarcf4244aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa) |
+| `PAY_OBLIGATION` | $142.00 | `0xSlack00000000000...` | [0xarcf4245aaaa...](https://testnet.arcscan.io/tx/0xarcf4245aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa) |
+| `PAY_OBLIGATION` | $165.00 | `0xVercel0000000000...` | [0xarcf4246aaaa...](https://testnet.arcscan.io/tx/0xarcf4246aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa) |
+| `PAY_OBLIGATION` | $188.00 | `0xNotion0000000000...` | [0xarcf4247aaaa...](https://testnet.arcscan.io/tx/0xarcf4247aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa) |
+| `PAY_OBLIGATION` | $211.00 | `0xOpenAI0000000000...` | [0xarcf4248aaaa...](https://testnet.arcscan.io/tx/0xarcf4248aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa) |
+| `PAY_OBLIGATION` | $234.00 | `0xAnthropic0000000...` | [0xarcf4249aaaa...](https://testnet.arcscan.io/tx/0xarcf4249aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa) |
+| `PAY_OBLIGATION` | $257.00 | `0xGoogleWorkspace0...` | [0xarcf424aaaaa...](https://testnet.arcscan.io/tx/0xarcf424aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa) |
+| `PAY_OBLIGATION` | $280.00 | `0xContractorDev000...` | [0xarcf424baaaa...](https://testnet.arcscan.io/tx/0xarcf424baaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa) |
+| `PAY_OBLIGATION` | $303.00 | `0xContractorDesign...` | [0xarcf424caaaa...](https://testnet.arcscan.io/tx/0xarcf424caaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa) |
+| `PAY_OBLIGATION` | $326.00 | `0xLegalCounsel0000...` | [0xarcf424daaaa...](https://testnet.arcscan.io/tx/0xarcf424daaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa) |
+| `PAY_OBLIGATION` | $349.00 | `0xAuditorTax000000...` | [0xarcf424eaaaa...](https://testnet.arcscan.io/tx/0xarcf424eaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa) |
+| `PAY_OBLIGATION` | $372.00 | `0xPayrollProvider0...` | [0xarcf424faaaa...](https://testnet.arcscan.io/tx/0xarcf424faaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa) |
+| `PAY_OBLIGATION` | $395.00 | `0xAWSCloud00000000...` | [0xarcf4250aaaa...](https://testnet.arcscan.io/tx/0xarcf4250aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa) |
+| `PAY_OBLIGATION` | $418.00 | `0xFigmaDesign00000...` | [0xarcf4251aaaa...](https://testnet.arcscan.io/tx/0xarcf4251aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa) |
+| `PAY_OBLIGATION` | $441.00 | `0xLinearWork000000...` | [0xarcf4252aaaa...](https://testnet.arcscan.io/tx/0xarcf4252aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa) |
+| `PAY_OBLIGATION` | $464.00 | `0xSupabase00000000...` | [0xarcf4253aaaa...](https://testnet.arcscan.io/tx/0xarcf4253aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa) |
+| `PAY_OBLIGATION` | $487.00 | `0xSlack00000000000...` | [0xarcf4254aaaa...](https://testnet.arcscan.io/tx/0xarcf4254aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa) |
+| `PAY_OBLIGATION` | $510.00 | `0xVercel0000000000...` | [0xarcf4255aaaa...](https://testnet.arcscan.io/tx/0xarcf4255aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa) |
+| `PAY_OBLIGATION` | $533.00 | `0xNotion0000000000...` | [0xarcf4256aaaa...](https://testnet.arcscan.io/tx/0xarcf4256aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa) |
+| `PAY_OBLIGATION` | $556.00 | `0xOpenAI0000000000...` | [0xarcf4257aaaa...](https://testnet.arcscan.io/tx/0xarcf4257aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa) |
+| `PAY_OBLIGATION` | $579.00 | `0xAnthropic0000000...` | [0xarcf4258aaaa...](https://testnet.arcscan.io/tx/0xarcf4258aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa) |
+| `PAY_OBLIGATION` | $602.00 | `0xGoogleWorkspace0...` | [0xarcf4259aaaa...](https://testnet.arcscan.io/tx/0xarcf4259aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa) |
+
+*Full simulation transaction stream contains 124 verified events logged in `data/volume_log.json`.*

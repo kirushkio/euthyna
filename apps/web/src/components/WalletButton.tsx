@@ -1,23 +1,24 @@
 'use client';
 
 import React, { useState, useRef, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import {
   Wallet,
   Check,
   Copy,
   ExternalLink,
   ChevronDown,
-  ShieldAlert,
   AlertTriangle,
   LogOut,
-  UserCheck,
   KeyRound,
   Shield,
-  Bot
+  Bot,
+  UserCheck
 } from 'lucide-react';
 import { useWallet, TreasuryRole } from '../context/WalletContext';
 
 export const WalletButton: React.FC = () => {
+  const router = useRouter();
   const {
     address,
     isConnected,
@@ -58,33 +59,33 @@ export const WalletButton: React.FC = () => {
     return `${addr.slice(0, 6)}...${addr.slice(-4)}`;
   };
 
-  const getRoleColor = (role: TreasuryRole) => {
+  const getRoleBadge = (role: TreasuryRole) => {
     switch (role) {
       case 'OWNER':
-        return 'bg-amber-500/20 text-amber-300 border-amber-500/40';
+        return {
+          bg: 'bg-amber-50 text-amber-700 border-amber-200',
+          icon: <KeyRound className="w-3 h-3 text-amber-600" />
+        };
       case 'REGISTRAR':
-        return 'bg-blue-500/20 text-blue-300 border-blue-500/40';
+        return {
+          bg: 'bg-blue-50 text-blue-700 border-blue-200',
+          icon: <UserCheck className="w-3 h-3 text-blue-600" />
+        };
       case 'AGENT':
-        return 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40';
+        return {
+          bg: 'bg-emerald-50 text-emerald-700 border-emerald-200',
+          icon: <Bot className="w-3 h-3 text-emerald-600" />
+        };
       case 'GUARDIAN':
-        return 'bg-red-500/20 text-red-300 border-red-500/40';
+        return {
+          bg: 'bg-rose-50 text-rose-700 border-rose-200',
+          icon: <Shield className="w-3 h-3 text-rose-600" />
+        };
       default:
-        return 'bg-gray-800 text-gray-300 border-gray-700';
-    }
-  };
-
-  const getRoleIcon = (role: TreasuryRole) => {
-    switch (role) {
-      case 'OWNER':
-        return <KeyRound className="w-3 h-3 text-amber-400" />;
-      case 'REGISTRAR':
-        return <UserCheck className="w-3 h-3 text-blue-400" />;
-      case 'AGENT':
-        return <Bot className="w-3 h-3 text-emerald-400" />;
-      case 'GUARDIAN':
-        return <Shield className="w-3 h-3 text-red-400" />;
-      default:
-        return null;
+        return {
+          bg: 'bg-slate-100 text-slate-700 border-slate-200',
+          icon: null
+        };
     }
   };
 
@@ -93,7 +94,7 @@ export const WalletButton: React.FC = () => {
       <button
         onClick={connect}
         disabled={isConnecting}
-        className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-medium text-xs shadow transition-all active:scale-95 disabled:opacity-50"
+        className="flex items-center gap-2 px-3.5 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-medium text-xs shadow-sm transition-all active:scale-95 disabled:opacity-50"
       >
         <Wallet className="w-3.5 h-3.5" />
         <span>{isConnecting ? 'Connecting...' : 'Connect Wallet'}</span>
@@ -101,72 +102,83 @@ export const WalletButton: React.FC = () => {
     );
   }
 
+  const roleMeta = getRoleBadge(activeRole);
+
   return (
     <div className="relative" ref={dropdownRef}>
-      <div className="flex items-center gap-1.5">
+      <div className="flex items-center gap-2">
         {/* Network Warning Pill if not on Arc Testnet */}
         {!isArcTestnet ? (
           <button
             onClick={switchToArc}
-            className="flex items-center gap-1.5 px-2.5 py-1 rounded bg-red-950/80 border border-red-700/60 text-red-300 text-xs font-mono hover:bg-red-900 transition-colors"
+            className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-amber-50 border border-amber-200 text-amber-800 text-xs font-medium hover:bg-amber-100 transition-colors shadow-sm"
             title="Click to switch wallet to Arc Testnet"
           >
-            <AlertTriangle className="w-3 h-3 animate-pulse text-red-400" />
+            <AlertTriangle className="w-3.5 h-3.5 text-amber-600 animate-pulse" />
             <span>Switch to Arc</span>
           </button>
         ) : (
-          <div className="hidden sm:flex items-center gap-1 px-2 py-1 rounded bg-gray-900 border border-gray-800 text-xs font-mono text-gray-400">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-            <span className="text-[11px] text-gray-300">Arc #5042002</span>
+          <div className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-50 border border-slate-200 text-xs font-mono text-slate-600">
+            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+            <span>Arc #5042002</span>
           </div>
         )}
 
         {/* Main Wallet Pill with Dropdown Trigger */}
         <button
           onClick={() => setIsOpen(!isOpen)}
-          className={`flex items-center gap-2 px-2.5 py-1 rounded-lg border text-xs font-mono transition-all hover:bg-gray-900/90 ${
-            isArcTestnet ? 'bg-gray-950 border-gray-800 text-gray-200' : 'bg-red-950/40 border-red-800/50 text-red-200'
+          className={`flex items-center gap-2 px-3 py-1.5 rounded-xl border text-xs font-medium transition-all shadow-2xs ${
+            isArcTestnet
+              ? 'bg-white border-slate-200 text-slate-800 hover:bg-slate-50'
+              : 'bg-amber-50 border-amber-200 text-amber-900'
           }`}
         >
-          {/* Active Role Indicator */}
-          <span className={`flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] uppercase font-bold border ${getRoleColor(activeRole)}`}>
-            {getRoleIcon(activeRole)}
-            <span>{activeRole}</span>
+          <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+          <span className="font-mono text-slate-800 font-semibold">
+            {address ? formatAddress(address) : ''}
           </span>
-
-          <span className="font-semibold">{address ? formatAddress(address) : ''}</span>
-          <ChevronDown className={`w-3.5 h-3.5 text-gray-400 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
+          <ChevronDown
+            className={`w-3.5 h-3.5 text-slate-400 transition-transform ${
+              isOpen ? 'rotate-180' : ''
+            }`}
+          />
         </button>
       </div>
 
       {/* Dropdown Menu */}
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-72 rounded-xl bg-gray-950 border border-gray-800 shadow-2xl p-4 z-50 space-y-3.5 font-sans animate-in fade-in slide-in-from-top-2">
-          {/* Header & Balance */}
+        <div className="absolute right-0 mt-2 w-72 rounded-xl bg-white border border-slate-200 shadow-xl p-4 z-50 space-y-3.5 font-sans animate-in fade-in slide-in-from-top-1 text-slate-800">
+          {/* Header & Account */}
           <div>
-            <div className="flex items-center justify-between text-xs text-gray-400 mb-1">
+            <div className="flex items-center justify-between text-xs text-slate-500 mb-1.5">
               <span>Connected Account</span>
-              <span className="flex items-center gap-1 text-[11px] text-emerald-400 font-mono">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+              <span className="flex items-center gap-1 text-[11px] text-emerald-600 font-medium">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
                 Arc Testnet
               </span>
             </div>
-            <div className="p-2.5 rounded-lg bg-gray-900 border border-gray-800 flex items-center justify-between">
-              <span className="font-mono text-xs text-gray-200 font-semibold">{address ? formatAddress(address) : ''}</span>
+            <div className="p-2.5 rounded-lg bg-slate-50 border border-slate-200/80 flex items-center justify-between">
+              <span className="font-mono text-xs text-slate-800 font-semibold">
+                {address ? formatAddress(address) : ''}
+              </span>
               <div className="flex items-center gap-1">
                 <button
                   onClick={handleCopy}
-                  className="p-1 rounded hover:bg-gray-800 text-gray-400 hover:text-white transition-colors"
+                  className="p-1 rounded hover:bg-slate-200 text-slate-500 hover:text-slate-800 transition-colors"
                   title="Copy full address"
                 >
-                  {copied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+                  {copied ? (
+                    <Check className="w-3.5 h-3.5 text-emerald-600" />
+                  ) : (
+                    <Copy className="w-3.5 h-3.5" />
+                  )}
                 </button>
                 {address && (
                   <a
-                    href={`https://testnet.arcscan.io/address/${address}`}
+                    href={`https://testnet.arcscan.app/address/${address}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="p-1 rounded hover:bg-gray-800 text-gray-400 hover:text-white transition-colors"
+                    className="p-1 rounded hover:bg-slate-200 text-slate-500 hover:text-slate-800 transition-colors"
                     title="View on ArcScan"
                   >
                     <ExternalLink className="w-3.5 h-3.5" />
@@ -177,49 +189,58 @@ export const WalletButton: React.FC = () => {
           </div>
 
           {/* USDC Balance */}
-          <div className="p-2.5 rounded-lg bg-blue-950/30 border border-blue-900/40 flex items-center justify-between">
-            <span className="text-xs text-blue-300 font-medium">Arc USDC Balance</span>
-            <span className="font-mono text-sm font-bold text-white">${usdcBalance}</span>
+          <div className="p-2.5 rounded-lg bg-blue-50/70 border border-blue-100 flex items-center justify-between">
+            <div>
+              <div className="text-[10px] text-blue-600 uppercase font-semibold">
+                Gas / Wallet Balance
+              </div>
+              <div className="text-sm font-bold text-blue-950 font-mono">
+                {usdcBalance} USDC
+              </div>
+            </div>
+            <span className="text-[10px] font-medium text-blue-600 bg-white px-2 py-0.5 rounded border border-blue-200">
+              Native Gas
+            </span>
           </div>
 
-          {/* Judge Mode Role Switcher */}
-          <div className="pt-2 border-t border-gray-800 space-y-2">
-            <div className="flex items-center justify-between text-[11px] text-gray-400">
-              <span className="font-semibold text-gray-300">Simulate Role (Judge Mode)</span>
-              <span className="text-[10px] text-blue-400 font-mono">Separation of Duties</span>
+          {/* Demo Role Switcher */}
+          <div className="pt-1 border-t border-slate-100">
+            <div className="text-[11px] text-slate-400 font-medium mb-1.5">
+              Simulate Role (Demo Mode):
             </div>
-            <div className="grid grid-cols-2 gap-1.5">
+            <div className="grid grid-cols-2 gap-1.5 text-xs">
               {(['OWNER', 'REGISTRAR', 'AGENT', 'GUARDIAN'] as TreasuryRole[]).map(r => (
                 <button
                   key={r}
-                  onClick={() => setDemoRole(r)}
-                  className={`flex items-center gap-1.5 px-2 py-1.5 rounded-md text-[11px] font-mono font-medium transition-all text-left ${
+                  onClick={() => {
+                    setDemoRole(r);
+                    setIsOpen(false);
+                  }}
+                  className={`px-2 py-1.5 rounded-md text-[11px] font-medium text-left border transition-all ${
                     activeRole === r
-                      ? 'bg-blue-600 text-white shadow'
-                      : 'bg-gray-900 text-gray-400 hover:text-gray-200 hover:bg-gray-850 border border-gray-800'
+                      ? 'bg-blue-600 text-white border-blue-600 shadow-sm'
+                      : 'bg-slate-50 hover:bg-slate-100 text-slate-700 border-slate-200'
                   }`}
                 >
-                  {getRoleIcon(r)}
-                  <span>{r}</span>
+                  {r}
                 </button>
               ))}
             </div>
-            <p className="text-[10px] text-gray-500 leading-tight">
-              Test onchain role access: Owner authorizes policy, Registrar inputs obligations, Agent sweeps yield, Guardian pauses vault.
-            </p>
           </div>
 
           {/* Disconnect Action */}
-          <div className="pt-2 border-t border-gray-800">
+          <div className="pt-2 border-t border-slate-100 flex items-center justify-between">
+            <span className="text-[11px] text-slate-400">MetaMask Session</span>
             <button
-              onClick={() => {
-                disconnect();
+              onClick={async () => {
                 setIsOpen(false);
+                await disconnect();
+                router.replace('/');
               }}
-              className="w-full flex items-center justify-center gap-2 px-3 py-1.5 rounded-lg bg-red-950/40 hover:bg-red-900/60 border border-red-800/50 text-red-300 text-xs font-medium transition-colors"
+              className="flex items-center gap-1 text-xs text-rose-600 hover:text-rose-700 font-medium hover:underline"
             >
-              <LogOut className="w-3.5 h-3.5" />
-              <span>Disconnect Wallet</span>
+              <LogOut className="w-3 h-3" />
+              <span>Disconnect</span>
             </button>
           </div>
         </div>

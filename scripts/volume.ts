@@ -62,7 +62,7 @@ export function runVolumeGeneration(): VolumeTransaction[] {
       amountUsdc: amount,
       payeeOrVenue: payee,
       blockNumber,
-      explorerUrl: `https://testnet.arcscan.app/tx/${hash}`,
+      explorerUrl: `https://testnet.arcscan.io/tx/${hash}`,
       timestamp: new Date(Date.now() - (65 - i) * 3600 * 1000).toISOString()
     });
     txCounter++;
@@ -85,7 +85,7 @@ export function runVolumeGeneration(): VolumeTransaction[] {
       amountUsdc: amount,
       payeeOrVenue: venue,
       blockNumber,
-      explorerUrl: `https://testnet.arcscan.app/tx/${hash}`,
+      explorerUrl: `https://testnet.arcscan.io/tx/${hash}`,
       timestamp: new Date(Date.now() - (24 - i) * 7200 * 1000).toISOString()
     });
     txCounter++;
@@ -104,7 +104,7 @@ export function runVolumeGeneration(): VolumeTransaction[] {
       amountUsdc: '0.00',
       payeeOrVenue: 'Arc Testnet Memo Contract',
       blockNumber,
-      explorerUrl: `https://testnet.arcscan.app/tx/${hash}`,
+      explorerUrl: `https://testnet.arcscan.io/tx/${hash}`,
       timestamp: new Date(Date.now() - (35 - i) * 1800 * 1000).toISOString()
     });
     txCounter++;

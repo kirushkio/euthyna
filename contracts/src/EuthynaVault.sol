@@ -120,6 +120,8 @@ contract EuthynaVault {
     error VenueNotEnabled();
     error VenueCapacityExceeded();
     error BelowMinTicket();
+    error TransferFailed();
+    error ApproveFailed();
 
     // --- Modifiers ---
     modifier onlyOwner() {
@@ -216,11 +218,13 @@ contract EuthynaVault {
     }
 
     function rescueToOwner(address token, uint256 amount) external onlyOwner {
+        bool success;
         if (token == address(usdc)) {
-            usdc.transfer(owner, amount);
+            success = usdc.transfer(owner, amount);
         } else {
-            IERC20(token).transfer(owner, amount);
+            success = IERC20(token).transfer(owner, amount);
         }
+        if (!success) revert TransferFailed();
         emit Rescued(token, amount);
     }
 
@@ -344,7 +348,8 @@ contract EuthynaVault {
         emit Paid(id, ob.payee, amount, seq);
         emit DecisionAnchored(seq, decisionHash);
 
-        usdc.transfer(ob.payee, amount);
+        bool success = usdc.transfer(ob.payee, amount);
+        if (!success) revert TransferFailed();
     }
 
     /**
@@ -381,7 +386,8 @@ contract EuthynaVault {
         emit DecisionAnchored(seq, decisionHash);
 
         // Approve and transfer to venue adapter
-        usdc.approve(venue, amount);
+        bool approved = usdc.approve(venue, amount);
+        if (!approved) revert ApproveFailed();
         IVenueAdapter(venue).deposit(amount);
     }
 

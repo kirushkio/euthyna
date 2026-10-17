@@ -57,7 +57,7 @@ export async function generateTractionReport() {
 
 | Business | Vault Contract Address | Reserve Floor | Spending Cap | Role |
 | :--- | :--- | :--- | :--- | :--- |
-${deployments.businesses.map(b => `| **${b.name}** | [\`${b.vaultAddress}\`](https://testnet.arcscan.app/address/${b.vaultAddress}) | $${b.policy.reserveFloorUsdc} | $${b.policy.dailyCapUsdc}/day | Pilot Vault |`).join('\n')}
+${deployments.businesses.map(b => `| **${b.name}** | [\`${b.vaultAddress}\`](https://testnet.arcscan.io/address/${b.vaultAddress}) | $${b.policy.reserveFloorUsdc} | $${b.policy.dailyCapUsdc}/day | Pilot Vault |`).join('\n')}
 
 ---
 

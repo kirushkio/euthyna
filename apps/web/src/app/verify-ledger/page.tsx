@@ -8,11 +8,13 @@ import {
   ShieldCheck,
   RotateCw,
   AlertTriangle,
-  Lock,
   ExternalLink,
-  Sliders
+  Sliders,
+  ChevronDown,
+  ChevronUp,
+  Lock,
+  Layers
 } from 'lucide-react';
-import { ProvenanceBadge } from '../../components/ProvenanceBadge';
 
 interface VerifiedBlock {
   seq: number;
@@ -31,7 +33,7 @@ const INITIAL_BLOCKS: VerifiedBlock[] = [
   {
     seq: 1,
     simulatedDay: 0,
-    action: 'ALLOCATE',
+    action: 'ALLOCATE (Yield Sweep)',
     amount: '4,500.00 USDC',
     prevHash: '0x0000000000000000000000000000000000000000000000000000000000000000',
     computedHash: '0x1928471029471029471029471029471029471029471029471029471029471029',
@@ -43,7 +45,7 @@ const INITIAL_BLOCKS: VerifiedBlock[] = [
   {
     seq: 2,
     simulatedDay: 3,
-    action: 'PAY_OBLIGATION',
+    action: 'PAY_OBLIGATION (AWS Cloud)',
     amount: '450.00 USDC',
     prevHash: '0x1928471029471029471029471029471029471029471029471029471029471029',
     computedHash: '0x8194719471947194719471947194719471947194719471947194719471947194',
@@ -55,7 +57,7 @@ const INITIAL_BLOCKS: VerifiedBlock[] = [
   {
     seq: 3,
     simulatedDay: 10,
-    action: 'PAY_OBLIGATION (Discount)',
+    action: 'PAY_OBLIGATION (Figma 2% Discount)',
     amount: '1,470.00 USDC',
     prevHash: '0x8194719471947194719471947194719471947194719471947194719471947194',
     computedHash: '0x3f9821bb49a7102049e7710291938abf01948194819481948194819481948194',
@@ -67,7 +69,7 @@ const INITIAL_BLOCKS: VerifiedBlock[] = [
   {
     seq: 4,
     simulatedDay: 12,
-    action: 'REDEEM (Payroll Buffer)',
+    action: 'REDEEM (Payroll Liquidity Buffer)',
     amount: '1,000.00 USDC',
     prevHash: '0x3f9821bb49a7102049e7710291938abf01948194819481948194819481948194',
     computedHash: '0x9920184719284710294710294710294710294710294710294710294710294710',
@@ -79,7 +81,7 @@ const INITIAL_BLOCKS: VerifiedBlock[] = [
   {
     seq: 5,
     simulatedDay: 14,
-    action: 'PAY_OBLIGATION (Payroll)',
+    action: 'PAY_OBLIGATION (Bi-Weekly Payroll)',
     amount: '4,000.00 USDC',
     prevHash: '0x9920184719284710294710294710294710294710294710294710294710294710',
     computedHash: '0x4482019284710294710294710294710294710294710294710294710294710294',
@@ -93,7 +95,7 @@ const INITIAL_BLOCKS: VerifiedBlock[] = [
 export default function VerifyLedgerPage() {
   const [isVerifying, setIsVerifying] = useState(false);
   const [isTampered, setIsTampered] = useState(false);
-  const [verificationDone, setVerificationDone] = useState(true);
+  const [expandedSeq, setExpandedSeq] = useState<number | null>(3);
 
   const blocks: VerifiedBlock[] = INITIAL_BLOCKS.map(b => {
     if (isTampered && b.seq >= 3) {
@@ -111,7 +113,6 @@ export default function VerifyLedgerPage() {
     setIsVerifying(true);
     setTimeout(() => {
       setIsVerifying(false);
-      setVerificationDone(true);
     }, 600);
   };
 
@@ -119,36 +120,35 @@ export default function VerifyLedgerPage() {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded-xl bg-gray-900 border border-gray-800">
+      {/* Header Bar */}
+      <div className="p-5 rounded-xl bg-white border border-slate-200/90 shadow-subtle flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <div className="flex items-center gap-2">
-            <h1 className="text-base font-bold text-white">Cryptographic Audit Ledger Verification</h1>
-            <ProvenanceBadge type="LEDGER" />
-          </div>
-          <p className="text-xs text-gray-400 mt-1">
-            Recomputes the SHA-256 hash chain in your browser, verifies ECDSA agent signatures, and matches each block to onchain DecisionAnchored events from the Arc vault.
+          <h2 className="text-base font-bold text-slate-900">
+            Cryptographic Audit Ledger & Hash-Chain Verification
+          </h2>
+          <p className="text-xs text-slate-500 mt-1">
+            Recomputes the SHA-256 hash chain, verifies ECDSA agent signatures, and confirms state-root anchoring on Arc Testnet.
           </p>
         </div>
 
         <div className="flex items-center gap-2">
-          {/* Tamper simulator */}
+          {/* Tamper Simulator Button */}
           <button
             onClick={() => setIsTampered(!isTampered)}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-mono font-bold border transition-colors ${
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold border transition-all ${
               isTampered
-                ? 'bg-rose-950 text-rose-300 border-rose-800'
-                : 'bg-gray-800 text-gray-300 border-gray-700 hover:bg-gray-700'
+                ? 'bg-rose-50 text-rose-700 border-rose-300'
+                : 'bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100'
             }`}
           >
             <Sliders className="w-3.5 h-3.5" />
-            <span>{isTampered ? 'Tamper Active (Seq #3)' : 'Simulate Tampering'}</span>
+            <span>{isTampered ? 'Tamper Active (Seq #3)' : 'Simulate Tamper'}</span>
           </button>
 
           <button
             onClick={handleRecompute}
             disabled={isVerifying}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-mono font-bold transition-colors shadow"
+            className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold transition-all shadow-xs"
           >
             <RotateCw className={`w-3.5 h-3.5 ${isVerifying ? 'animate-spin' : ''}`} />
             <span>Re-verify Entire Chain</span>
@@ -156,113 +156,138 @@ export default function VerifyLedgerPage() {
         </div>
       </div>
 
-      {/* Verification Status Card */}
+      {/* Verification Summary Banner */}
       <div
-        className={`p-4 rounded-xl border flex flex-col sm:flex-row sm:items-center justify-between gap-4 font-mono text-xs ${
+        className={`p-5 rounded-xl border flex flex-col sm:flex-row sm:items-center justify-between gap-4 transition-all shadow-subtle ${
           allPassed
-            ? 'bg-emerald-950/40 border-emerald-700 text-emerald-300'
-            : 'bg-rose-950/40 border-rose-700 text-rose-300'
+            ? 'bg-emerald-50/80 border-emerald-200 text-emerald-950'
+            : 'bg-rose-50/80 border-rose-200 text-rose-950'
         }`}
       >
         <div className="flex items-center gap-3">
           {allPassed ? (
-            <CheckCircle2 className="w-6 h-6 text-emerald-400 shrink-0" />
+            <CheckCircle2 className="w-6 h-6 text-emerald-600 shrink-0" />
           ) : (
-            <XCircle className="w-6 h-6 text-rose-400 shrink-0" />
+            <XCircle className="w-6 h-6 text-rose-600 shrink-0" />
           )}
           <div>
             <div className="font-bold text-sm">
               {allPassed
-                ? '100% LEDGER INTEGRITY VERIFIED (GREEN)'
-                : 'INTEGRITY BREACH DETECTED: HASH CHAIN BROKEN AT SEQ #3'}
+                ? '100% Cryptographic Ledger Integrity Verified'
+                : 'Integrity Breach Detected: Hash Chain Broken at Seq #3'}
             </div>
-            <div className="text-[11px] opacity-80 mt-0.5">
+            <div className="text-xs text-slate-600 mt-0.5">
               {allPassed
-                ? 'All SHA-256 hashes recomputed, signatures match agent key, onchain anchors confirmed.'
-                : 'Stored hash does not match computed hash of canonized JSON. Subsequent blocks invalidated.'}
+                ? '5 of 5 sequential blocks mathematically valid · All agent ECDSA signatures verified · All Arc anchors confirmed.'
+                : 'Tampering detected! The stored SHA-256 digest does not match the recomputed block hash. Fraudulent record isolated.'}
             </div>
           </div>
         </div>
 
-        <div className="text-right">
-          <span className="px-2.5 py-1 rounded bg-black/40 border border-current font-bold">
-            {blocks.filter(b => b.isValid).length} / {blocks.length} Blocks Valid
+        <div className="flex items-center gap-3 font-mono text-xs self-start sm:self-auto">
+          <span className="font-bold">
+            Records Checked: {blocks.length} / {blocks.length}
           </span>
         </div>
       </div>
 
-      {/* Visual Chain Blocks */}
-      <div className="space-y-3 font-mono">
-        {blocks.map((b, idx) => (
-          <div
-            key={b.seq}
-            className={`p-4 rounded-xl border transition-all ${
-              b.isValid
-                ? 'bg-gray-900 border-gray-800 hover:border-gray-700'
-                : 'bg-rose-950/30 border-rose-800/80 shadow-rose-950/40 shadow-lg'
-            }`}
-          >
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-gray-800 pb-2.5">
-              <div className="flex items-center gap-2 text-xs">
-                <span
-                  className={`px-2 py-0.5 rounded font-bold ${
-                    b.isValid ? 'bg-blue-950 text-blue-400 border border-blue-800' : 'bg-rose-950 text-rose-400 border border-rose-800'
-                  }`}
-                >
-                  Block #{b.seq}
-                </span>
-                <span className="text-purple-400 font-semibold">Sim Day {b.simulatedDay}</span>
-                <span className="text-gray-300 font-bold">· {b.action}</span>
-                <span className="text-emerald-400 font-bold">({b.amount})</span>
+      {/* Sequenced Blocks List */}
+      <div className="space-y-3.5">
+        {blocks.map((block) => {
+          const isExpanded = expandedSeq === block.seq;
+
+          return (
+            <div
+              key={block.seq}
+              className={`p-5 rounded-xl bg-white border transition-all shadow-subtle space-y-3 ${
+                block.isValid ? 'border-slate-200/90' : 'border-rose-300 ring-1 ring-rose-300'
+              }`}
+            >
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-slate-100">
+                <div className="flex items-center gap-2.5">
+                  <span className="font-mono text-xs font-bold bg-slate-100 text-slate-800 px-2 py-0.5 rounded border border-slate-200">
+                    Seq #{block.seq}
+                  </span>
+                  <span className="text-xs font-semibold text-slate-800">{block.action}</span>
+                  <span className="text-xs text-slate-400">· Day {block.simulatedDay}</span>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <span
+                    className={`px-2.5 py-0.5 rounded text-xs font-semibold flex items-center gap-1 ${
+                      block.isValid
+                        ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                        : 'bg-rose-50 text-rose-700 border border-rose-200'
+                    }`}
+                  >
+                    {block.isValid ? (
+                      <CheckCircle2 className="w-3.5 h-3.5" />
+                    ) : (
+                      <XCircle className="w-3.5 h-3.5" />
+                    )}
+                    <span>{block.isValid ? 'VERIFIED' : 'TAMPERED / MISMATCH'}</span>
+                  </span>
+
+                  <button
+                    onClick={() => setExpandedSeq(isExpanded ? null : block.seq)}
+                    className="p-1 rounded hover:bg-slate-100 text-slate-400 hover:text-slate-700 transition-colors"
+                  >
+                    {isExpanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+                  </button>
+                </div>
               </div>
 
-              <div className="flex items-center gap-2 text-xs">
-                {b.isValid ? (
-                  <span className="flex items-center gap-1 text-emerald-400 font-bold">
-                    <CheckCircle2 className="w-3.5 h-3.5" />
-                    VALID ANCHOR
-                  </span>
-                ) : (
-                  <span className="flex items-center gap-1 text-rose-400 font-bold">
-                    <XCircle className="w-3.5 h-3.5" />
-                    HASH MISMATCH
-                  </span>
-                )}
-              </div>
-            </div>
+              {/* Main Info */}
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
+                <div>
+                  <div className="text-[10px] text-slate-400 uppercase font-semibold">Transaction Amount</div>
+                  <div className="text-base font-bold text-slate-900 font-mono mt-0.5">
+                    {block.amount}
+                  </div>
+                </div>
 
-            <div className="mt-3 grid grid-cols-1 md:grid-cols-2 gap-3 text-[11px]">
-              <div>
-                <span className="text-gray-500">Prev Hash: </span>
-                <span className="text-gray-400 truncate">{b.prevHash.slice(0, 22)}...</span>
+                <div className="flex items-center gap-3 font-mono text-[11px]">
+                  <div className="flex items-center gap-1 text-slate-600">
+                    <span>Signature:</span>
+                    <span className={block.signatureStatus === 'VALID' ? 'text-emerald-700 font-bold' : 'text-rose-600 font-bold'}>
+                      {block.signatureStatus}
+                    </span>
+                  </div>
+
+                  <a
+                    href={`https://testnet.arcscan.app/tx/${block.anchorTx}`}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="text-blue-600 hover:underline flex items-center gap-1 font-sans font-medium"
+                  >
+                    <span>Arc Anchor</span>
+                    <ExternalLink className="w-3 h-3" />
+                  </a>
+                </div>
               </div>
-              <div>
-                <span className="text-gray-500">Computed Hash: </span>
-                <span className={b.isValid ? 'text-gray-300' : 'text-rose-400 font-bold'}>
-                  {b.computedHash.slice(0, 22)}...
-                </span>
-              </div>
-              <div>
-                <span className="text-gray-500">ECDSA Signature: </span>
-                <span className={b.signatureStatus === 'VALID' ? 'text-emerald-400' : 'text-rose-400 font-bold'}>
-                  {b.signatureStatus === 'VALID' ? '✓ Recovers Agent Key' : '✗ Signature Recovery Failed'}
-                </span>
-              </div>
-              <div className="flex items-center gap-1">
-                <span className="text-gray-500">Arc Anchor: </span>
-                <a
-                  href={`https://testnet.arcscan.app/tx/${b.anchorTx}`}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="text-cyan-400 hover:underline flex items-center gap-0.5"
-                >
-                  <span>{b.anchorTx.slice(0, 14)}...</span>
-                  <ExternalLink className="w-3 h-3" />
-                </a>
-              </div>
+
+              {/* Expandable Hashes */}
+              {isExpanded && (
+                <div className="pt-3 border-t border-slate-100 font-mono text-[11px] space-y-1.5 animate-in fade-in">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between text-slate-500">
+                    <span>Previous Block Hash:</span>
+                    <span className="text-slate-700 font-medium truncate max-w-sm">{block.prevHash}</span>
+                  </div>
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between text-slate-500">
+                    <span>Computed Hash:</span>
+                    <span className={`font-medium truncate max-w-sm ${block.isValid ? 'text-slate-800' : 'text-rose-600 font-bold'}`}>
+                      {block.computedHash}
+                    </span>
+                  </div>
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between text-slate-500">
+                    <span>Stored Hash:</span>
+                    <span className="text-slate-800 font-medium truncate max-w-sm">{block.storedHash}</span>
+                  </div>
+                </div>
+              )}
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );

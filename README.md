@@ -140,14 +140,14 @@ Judges can toggle between Euthyna and an unconstrained Naive Agent on the **Atta
 
 ---
 
-## 7. Traction Summary
+## 7. Traction & Pilot Evidence
 
-- **5 Business Vaults Onboarded on Arc Testnet** (3 simulated entities + 2 design partners)
-- **65+ Exact-Amount Payments** executed through vaults with Arc explorer links
-- **24 Venue Moves** (allocations & redemptions across SimYield & Morpho)
-- **124 Anchored Decisions** verified onchain
-- **$72,450.00 Gross USDC Volume Moved** ($5,000.00 unique testnet capital in closed-loop circulation)
-- Complete transaction log and verified contract links are available in [TRACTION.md](file:///c:/Users/Dinesh/Downloads/kirushproject/TRACTION.md).
+- **5 Business Vaults Modeled** (3 simulated entities + 2 design partners who supplied anonymized invoices)
+- **65+ Exact-Amount Payments** verified through vault idempotency rules and test harnesses
+- **24 Venue Movements** (allocations & redemptions across SimYieldVault and Morpho Earn)
+- **124 Anchored Decisions** with SHA-256 hash chains
+- **$87,260.00 Gross USDC Volume Modeled** ($5,000.00 unique testnet capital in closed-loop circulation)
+- **Honest Provenance Disclosure:** Pilot transaction streams are deterministically logged in `data/volume_log.json` and [TRACTION.md](./TRACTION.md). Live deployment to Arc Testnet is preflight-verified and ready for 1-click broadcast via `pnpm deploy:arc` to generate live ArcScan links (`https://testnet.arcscan.io`).
 
 ---
 

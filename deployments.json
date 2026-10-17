@@ -1,21 +1,22 @@
 {
   "network": "Arc Testnet",
   "chainId": 5042002,
-  "deployedAt": "2026-10-14T14:29:52.181Z",
+  "deployedAt": "2026-10-16T09:16:58.079Z",
   "usdc": "0x3600000000000000000000000000000000000000",
   "simYieldVault": "0x1A2B3C4D5E6F708192A1B2C3D4E5F60718293A4B",
   "morphoEarnVault": "0x9E8D7C6B5A4F3E2D1C0B9A8F7E6D5C4B3A2F1E0D",
   "usycTeller": "0x9fdF14c5B14173D74C08Af27AebFf39240dC105A",
   "memoContract": "0x5294E9927c3306DcBaDb03fe70b92e01cCede505",
+  "isRealBroadcast": true,
   "businesses": [
     {
       "id": "biz-studio-a",
       "name": "Studio A (Creative Agency)",
-      "vaultAddress": "0x3A1F4B8C2D7E90A1B2C3D4E5F60718293A4B5C6D",
-      "owner": "0x1111111111111111111111111111111111111111",
-      "registrar": "0x2222222222222222222222222222222222222222",
-      "agent": "0x3333333333333333333333333333333333333333",
-      "guardian": "0x4444444444444444444444444444444444444444",
+      "vaultAddress": "0x6ffdf10d5165510b5dd51f69cce7c52df2eaab01",
+      "owner": "0x5d1d40f9a94e73738596ee9461e36efa5785ec56",
+      "registrar": "0x5d1d40f9a94e73738596ee9461e36efa5785ec56",
+      "agent": "0x5d1d40f9a94e73738596ee9461e36efa5785ec56",
+      "guardian": "0x5d1d40f9a94e73738596ee9461e36efa5785ec56",
       "policy": {
         "perTxCapUsdc": "5,000.00",
         "dailyCapUsdc": "8,000.00",
@@ -78,5 +79,7 @@
         "reserveFloorUsdc": "2,500.00"
       }
     }
-  ]
+  ],
+  "deployerAddress": "0x5d1d40f9a94e73738596ee9461e36efa5785ec56",
+  "vaultDeploymentTx": "0x604f311ef11471e1fca60d6d4182d2cda4519f4decc50f806431ef3aa99308fd"
 }

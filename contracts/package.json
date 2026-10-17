@@ -6,6 +6,10 @@
     "test": "vitest run"
   },
   "devDependencies": {
+    "@ethereumjs/common": "^10.1.3",
+    "@ethereumjs/util": "^10.1.3",
+    "@ethereumjs/vm": "^10.1.3",
+    "solc": "0.8.20",
     "viem": "^2.21.57",
     "vitest": "^2.1.8"
   }

@@ -4,10 +4,12 @@
   "private": true,
   "description": "Euthyna Treasury: AI treasurer for small businesses settled on Arc in USDC",
   "scripts": {
-    "build": "pnpm -r --filter=!apps/web run build && pnpm --filter=@euthyna/web build",
+    "build": "pnpm -r --filter=!@euthyna/web run build && pnpm --filter=@euthyna/web build",
     "test": "vitest run",
+    "preflight": "tsx scripts/preflight.ts",
     "bench": "tsx scripts/bench.ts",
     "deploy:arc": "tsx scripts/deploy.ts",
+    "set-roles": "tsx scripts/setRoles.ts",
     "seed": "tsx scripts/seed.ts",
     "volume": "tsx scripts/volume.ts",
     "traction": "tsx scripts/traction.ts",

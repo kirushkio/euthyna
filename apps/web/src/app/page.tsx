@@ -1,358 +1,252 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import {
   Wallet,
-  TrendingUp,
+  ArrowRight,
   Shield,
-  Calendar,
-  ArrowUpRight,
-  ArrowDownLeft,
-  CheckCircle,
+  TrendingUp,
+  GitCommit,
+  AlertCircle,
+  ExternalLink,
+  Loader2,
   AlertTriangle,
-  Play,
-  RotateCw
+  LogOut,
+  Sparkles
 } from 'lucide-react';
-import { ProvenanceBadge } from '../components/ProvenanceBadge';
+import { EuthynaLogo } from '../components/EuthynaLogo';
+import { useWallet } from '../context/WalletContext';
 
-const PILOT_BUSINESSES = [
-  {
-    id: 'biz-studio-a',
-    name: 'Studio A (Creative Agency)',
-    vault: '0x3A1F4B8C2D7E90A1B2C3D4E5F60718293A4B5C6D',
-    liquid: 5500.0,
-    reserveFloor: 3000.0,
-    venueDeployed: 4500.0,
-    bestApr: '5.20%',
-    simulatedDay: 10,
-    dailySpent: 1470.0,
-    dailyCap: 8000.0,
-    perTxCap: 5000.0
-  },
-  {
-    id: 'biz-dev-guild',
-    name: 'Dev Guild (Engineering Collective)',
-    vault: '0x4B2C5D9E3F8A01B2C3D4E5F60718293A4B5C6D7E',
-    liquid: 6200.0,
-    reserveFloor: 4000.0,
-    venueDeployed: 3800.0,
-    bestApr: '4.50%',
-    simulatedDay: 8,
-    dailySpent: 0.0,
-    dailyCap: 10000.0,
-    perTxCap: 5000.0
-  },
-  {
-    id: 'biz-saas-co',
-    name: 'SaaS Metrics Co (B2B Software)',
-    vault: '0x5C3D6E0F4A9B12C3D4E5F60718293A4B5C6D7E8F',
-    liquid: 4800.0,
-    reserveFloor: 2500.0,
-    venueDeployed: 5200.0,
-    bestApr: '5.20%',
-    simulatedDay: 12,
-    dailySpent: 450.0,
-    dailyCap: 8000.0,
-    perTxCap: 4000.0
-  },
-  {
-    id: 'biz-freelance-hub',
-    name: 'Freelance Hub (Contractor Collective)',
-    vault: '0x6D4E7F1A5B0C23D4E5F60718293A4B5C6D7E8F90',
-    liquid: 3100.0,
-    reserveFloor: 2000.0,
-    venueDeployed: 2900.0,
-    bestApr: '4.50%',
-    simulatedDay: 5,
-    dailySpent: 0.0,
-    dailyCap: 6000.0,
-    perTxCap: 2500.0
-  },
-  {
-    id: 'biz-design-studio',
-    name: 'Design Studio X (Product & Brand)',
-    vault: '0x7E5F8A2B6C1D34E5F60718293A4B5C6D7E8F90A1',
-    liquid: 4100.0,
-    reserveFloor: 2500.0,
-    venueDeployed: 3900.0,
-    bestApr: '5.20%',
-    simulatedDay: 7,
-    dailySpent: 0.0,
-    dailyCap: 6000.0,
-    perTxCap: 3000.0
-  }
-];
+export default function HomePage() {
+  const router = useRouter();
+  const {
+    isConnected,
+    isConnecting,
+    isArcTestnet,
+    address,
+    connect,
+    disconnect,
+    switchToArc,
+    connectError,
+    clearConnectError,
+  } = useWallet();
 
-const SAMPLE_OBLIGATIONS = [
-  {
-    id: '0xob-aws-01',
-    vendor: 'AWS Cloud Services',
-    amount: 450.0,
-    dueDay: 3,
-    status: 'PAID',
-    terms: 'Net 15 (No discount)',
-    kind: 'DISCRETIONARY',
-    paidDay: 3
-  },
-  {
-    id: '0xob-figma-02',
-    vendor: 'Figma Enterprise',
-    amount: 1500.0,
-    discountAmount: 1470.0,
-    dueDay: 30,
-    discountDeadline: 10,
-    status: 'DISCOUNT_CAPTURED',
-    terms: '2/10 Net 30 (Saved $30.00)',
-    kind: 'DISCRETIONARY',
-    paidDay: 10
-  },
-  {
-    id: '0xob-payroll-03',
-    vendor: 'Bi-Weekly Contractor Payroll',
-    amount: 4000.0,
-    dueDay: 14,
-    status: 'SCHEDULED',
-    terms: 'Mandatory',
-    kind: 'MANDATORY'
-  },
-  {
-    id: '0xob-linear-04',
-    vendor: 'Linear Workspaces',
-    amount: 320.0,
-    dueDay: 18,
-    status: 'PENDING',
-    terms: '1/10 Net 30',
-    kind: 'DISCRETIONARY'
-  }
-];
-
-export default function OverviewPage() {
-  const [selectedBizIndex, setSelectedBizIndex] = useState(0);
-  const biz = PILOT_BUSINESSES[selectedBizIndex];
-  const totalTreasury = biz.liquid + biz.venueDeployed;
-  const liquidPercent = ((biz.liquid / totalTreasury) * 100).toFixed(1);
-  const venuePercent = ((biz.venueDeployed / totalTreasury) * 100).toFixed(1);
+  const handleConnect = async () => {
+    clearConnectError();
+    const success = await connect();
+    if (success && isArcTestnet) {
+      router.push('/dashboard');
+    }
+  };
 
   return (
-    <div className="space-y-6">
-      {/* Top Banner / Selector */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded-xl bg-gray-900 border border-gray-800">
-        <div>
-          <div className="text-xs text-gray-400 font-mono flex items-center gap-2">
-            SELECT PILOT BUSINESS VAULT:
-            <ProvenanceBadge type="ONCHAIN" />
-          </div>
-          <div className="flex flex-wrap gap-2 mt-2">
-            {PILOT_BUSINESSES.map((b, i) => (
-              <button
-                key={b.id}
-                onClick={() => setSelectedBizIndex(i)}
-                className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
-                  selectedBizIndex === i
-                    ? 'bg-blue-600 text-white shadow'
-                    : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
-                }`}
-              >
-                {b.name}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        <div className="flex items-center gap-2">
-          <Link
-            href="/decision-feed"
-            className="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold transition-colors"
-          >
-            <Play className="w-3.5 h-3.5" />
-            View Decision Feed
+    <div className="min-h-screen bg-slate-50 text-slate-900 font-sans flex flex-col justify-between selection:bg-blue-100 selection:text-blue-900">
+      {/* Clean Header */}
+      <header className="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-slate-200/80">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+          <Link href="/" className="flex items-center gap-2">
+            <EuthynaLogo size="md" showWordmark={true} showTagline={false} />
           </Link>
-        </div>
-      </div>
 
-      {/* Main KPI Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        {/* Total Treasury */}
-        <div className="p-4 rounded-xl bg-gray-900 border border-gray-800 flex flex-col justify-between">
-          <div className="flex items-center justify-between">
-            <span className="text-xs text-gray-400 font-medium">Total Treasury</span>
-            <ProvenanceBadge type="ONCHAIN" />
-          </div>
-          <div className="mt-2">
-            <span className="text-2xl font-bold font-mono text-white tracking-tight">
-              ${totalTreasury.toLocaleString('en-US', { minimumFractionDigits: 2 })}
-            </span>
-            <div className="text-[11px] text-gray-400 mt-1 flex items-center gap-1">
-              <span>Settled in USDC on Arc</span>
+          {/* Network Label & Status */}
+          <div className="flex items-center gap-3">
+            <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-100 border border-slate-200 text-xs font-mono text-slate-600">
+              <span className={`w-2 h-2 rounded-full ${isConnected && isArcTestnet ? 'bg-emerald-500 animate-pulse' : 'bg-slate-400'}`} />
+              <span>Arc Testnet #5042002</span>
             </div>
-          </div>
-          <div className="mt-3 pt-3 border-t border-gray-800 text-[11px] font-mono text-blue-400 truncate">
-            Vault: {biz.vault.slice(0, 10)}...{biz.vault.slice(-8)}
-          </div>
-        </div>
 
-        {/* Liquid vs Reserve */}
-        <div className="p-4 rounded-xl bg-gray-900 border border-gray-800 flex flex-col justify-between">
-          <div className="flex items-center justify-between">
-            <span className="text-xs text-gray-400 font-medium">Liquid USDC Balance</span>
-            <ProvenanceBadge type="ONCHAIN" />
-          </div>
-          <div className="mt-2">
-            <span className="text-2xl font-bold font-mono text-emerald-400">
-              ${biz.liquid.toLocaleString('en-US', { minimumFractionDigits: 2 })}
-            </span>
-            <div className="text-[11px] text-gray-400 mt-1 flex items-center gap-1">
-              <span>{liquidPercent}% liquid in vault</span>
-            </div>
-          </div>
-          <div className="mt-3 pt-3 border-t border-gray-800 flex items-center justify-between text-[11px] font-mono">
-            <span className="text-gray-400">Reserve Floor:</span>
-            <span className="text-amber-400 font-bold">${biz.reserveFloor.toFixed(2)}</span>
-          </div>
-        </div>
-
-        {/* In-Venue Yield */}
-        <div className="p-4 rounded-xl bg-gray-900 border border-gray-800 flex flex-col justify-between">
-          <div className="flex items-center justify-between">
-            <span className="text-xs text-gray-400 font-medium">Deployed in Yield</span>
-            <ProvenanceBadge type="SIMULATED" />
-          </div>
-          <div className="mt-2">
-            <span className="text-2xl font-bold font-mono text-cyan-400">
-              ${biz.venueDeployed.toLocaleString('en-US', { minimumFractionDigits: 2 })}
-            </span>
-            <div className="text-[11px] text-gray-400 mt-1 flex items-center gap-1">
-              <span>{venuePercent}% earning {biz.bestApr} APR</span>
-            </div>
-          </div>
-          <div className="mt-3 pt-3 border-t border-gray-800 flex items-center justify-between text-[11px] font-mono">
-            <span className="text-gray-400">Venue:</span>
-            <span className="text-cyan-300">SimYield & Morpho</span>
+            {isConnected ? (
+              <div className="flex items-center gap-2">
+                <Link
+                  href="/dashboard"
+                  className="px-3 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold shadow-2xs flex items-center gap-1 transition-all"
+                >
+                  <span>Dashboard</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </Link>
+                <button
+                  onClick={disconnect}
+                  title="Disconnect Wallet"
+                  className="p-1.5 rounded-xl border border-slate-200 text-slate-500 hover:text-rose-600 hover:bg-slate-50 transition-colors"
+                >
+                  <LogOut className="w-3.5 h-3.5" />
+                </button>
+              </div>
+            ) : (
+              <button
+                onClick={handleConnect}
+                disabled={isConnecting}
+                className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs shadow-2xs transition-all disabled:opacity-50"
+              >
+                {isConnecting ? (
+                  <>
+                    <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                    <span>Connecting...</span>
+                  </>
+                ) : (
+                  <>
+                    <Wallet className="w-3.5 h-3.5" />
+                    <span>Connect Wallet</span>
+                  </>
+                )}
+              </button>
+            )}
           </div>
         </div>
+      </header>
 
-        {/* Day & Policy Caps */}
-        <div className="p-4 rounded-xl bg-gray-900 border border-gray-800 flex flex-col justify-between">
-          <div className="flex items-center justify-between">
-            <span className="text-xs text-gray-400 font-medium">Policy Caps</span>
-            <ProvenanceBadge type="ONCHAIN" />
-          </div>
-          <div className="mt-2">
-            <div className="flex items-center justify-between text-xs font-mono mb-1">
-              <span className="text-gray-400">Daily Cap:</span>
-              <span className="text-white">${biz.dailyCap.toFixed(2)}</span>
-            </div>
-            <div className="w-full bg-gray-800 h-1.5 rounded-full overflow-hidden">
-              <div
-                className="bg-blue-500 h-full rounded-full"
-                style={{ width: `${(biz.dailySpent / biz.dailyCap) * 100}%` }}
-              ></div>
-            </div>
-            <div className="flex items-center justify-between text-[11px] font-mono mt-1 text-gray-400">
-              <span>Spent: ${biz.dailySpent.toFixed(2)}</span>
-              <span>Per-Tx: ${biz.perTxCap.toFixed(2)}</span>
-            </div>
-          </div>
-          <div className="mt-3 pt-3 border-t border-gray-800 flex items-center justify-between text-[11px] font-mono">
-            <span className="text-gray-400">Simulated Clock:</span>
-            <span className="text-purple-400 font-bold">Day {biz.simulatedDay}</span>
-          </div>
+      {/* Main Hero & Action Section */}
+      <main className="flex-1 max-w-4xl mx-auto px-4 sm:px-6 py-16 flex flex-col items-center text-center">
+        {/* Brand Tagline */}
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 border border-blue-200/80 text-blue-700 text-xs font-semibold mb-6">
+          <Sparkles className="w-3.5 h-3.5 text-blue-600" />
+          <span>Intelligent Treasury. Protected Decisions.</span>
         </div>
-      </div>
 
-      {/* Visual Treasury Split Bar */}
-      <div className="p-4 rounded-xl bg-gray-900 border border-gray-800">
-        <div className="flex items-center justify-between text-xs mb-2 font-mono">
-          <span className="text-gray-300 font-bold">Capital Allocation Composition</span>
-          <span className="text-gray-400">
-            Liquid: ${biz.liquid.toFixed(2)} | In-Venue: ${biz.venueDeployed.toFixed(2)}
+        {/* Hero Heading */}
+        <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-slate-950 tracking-tight leading-[1.12] max-w-3xl">
+          Make Every Treasury Decision Count.
+        </h1>
+
+        {/* Short Plain-English Explanation */}
+        <p className="mt-5 text-base sm:text-lg text-slate-600 max-w-2xl mx-auto leading-relaxed">
+          Euthyna helps businesses evaluate early-payment discounts, keep idle cash earning yield, and enforce on-chain reserve floors to protect payroll.
+        </p>
+
+        {/* Primary Action Area */}
+        <div className="mt-8 flex flex-col items-center gap-3 w-full max-w-md">
+          {isConnected ? (
+            <div className="w-full p-4 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-3">
+              <div className="flex items-center justify-between text-xs">
+                <span className="text-slate-500 font-medium">Connected Wallet</span>
+                <span className="font-mono font-bold text-slate-800">
+                  {address ? `${address.slice(0, 6)}...${address.slice(-4)}` : ''}
+                </span>
+              </div>
+
+              {!isArcTestnet ? (
+                <button
+                  onClick={switchToArc}
+                  className="w-full py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-white font-semibold text-xs shadow-xs transition-colors flex items-center justify-center gap-2"
+                >
+                  <AlertTriangle className="w-4 h-4" />
+                  <span>Switch to Arc Testnet (#5042002)</span>
+                </button>
+              ) : (
+                <div className="flex gap-2">
+                  <Link
+                    href="/dashboard"
+                    className="flex-1 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs shadow-xs transition-all flex items-center justify-center gap-1.5"
+                  >
+                    <span>Enter Treasury Dashboard</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </Link>
+                  <button
+                    onClick={disconnect}
+                    className="px-3 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs transition-colors"
+                  >
+                    Disconnect
+                  </button>
+                </div>
+              )}
+            </div>
+          ) : (
+            <button
+              onClick={handleConnect}
+              disabled={isConnecting}
+              className="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm shadow-sm hover:shadow transition-all flex items-center justify-center gap-2.5 disabled:opacity-50"
+            >
+              {isConnecting ? (
+                <>
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                  <span>Connecting MetaMask...</span>
+                </>
+              ) : (
+                <>
+                  <Wallet className="w-4 h-4" />
+                  <span>Connect Wallet</span>
+                </>
+              )}
+            </button>
+          )}
+
+          {/* Simple Error Banner if connection was rejected */}
+          {connectError && (
+            <div className="p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-xs flex items-center gap-2 text-left animate-in fade-in">
+              <AlertCircle className="w-4 h-4 text-rose-600 shrink-0" />
+              <span>{connectError}</span>
+            </div>
+          )}
+
+          {/* Small Network Note */}
+          <span className="text-[11px] text-slate-400">
+            Settled on Arc Testnet in native USDC · Non-custodial smart contracts
           </span>
         </div>
-        <div className="h-4 w-full bg-gray-800 rounded-full overflow-hidden flex">
-          <div
-            className="bg-emerald-500 h-full transition-all duration-500"
-            style={{ width: `${liquidPercent}%` }}
-            title={`Liquid: $${biz.liquid.toFixed(2)}`}
-          ></div>
-          <div
-            className="bg-cyan-500 h-full transition-all duration-500"
-            style={{ width: `${venuePercent}%` }}
-            title={`Yield: $${biz.venueDeployed.toFixed(2)}`}
-          ></div>
-        </div>
-        <div className="flex items-center justify-between text-[11px] font-mono mt-2 text-gray-400">
-          <div className="flex items-center gap-1.5">
-            <span className="w-2.5 h-2.5 rounded-sm bg-emerald-500"></span>
-            <span>Liquid in Vault (Ready for payroll & discounts)</span>
-          </div>
-          <div className="flex items-center gap-1.5">
-            <span className="w-2.5 h-2.5 rounded-sm bg-cyan-500"></span>
-            <span>Deployed in Yield Venue (Accruing ~5.20% APR)</span>
-          </div>
-        </div>
-      </div>
 
-      {/* Upcoming Obligations Schedule */}
-      <div className="p-5 rounded-xl bg-gray-900 border border-gray-800">
-        <div className="flex items-center justify-between mb-4">
-          <div>
-            <h3 className="text-sm font-bold text-white">Upcoming Obligations & Cash Flow Timeline</h3>
-            <p className="text-xs text-gray-400 mt-0.5">
-              Physical vault enforces exact payment amounts, receipt attestations, and reserve safety.
+        {/* Three Concise Feature Points */}
+        <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-6 text-left w-full">
+          {/* Feature 1 */}
+          <div className="p-6 rounded-2xl bg-white border border-slate-200/90 shadow-2xs space-y-2.5">
+            <div className="w-9 h-9 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center font-bold">
+              <TrendingUp className="w-4 h-4" />
+            </div>
+            <h3 className="text-sm font-bold text-slate-900">1. Intelligent Cash Decisions</h3>
+            <p className="text-xs text-slate-500 leading-relaxed">
+              Captures up to 2% discounts on vendor bills (37.2% annualized return) and keeps cash earning 5.2% yield until optimal pay dates.
             </p>
           </div>
-          <ProvenanceBadge type="ONCHAIN" />
-        </div>
 
-        <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs font-mono">
-            <thead>
-              <tr className="border-b border-gray-800 text-gray-400">
-                <th className="py-2.5 px-3">Obligation ID</th>
-                <th className="py-2.5 px-3">Payee / Vendor</th>
-                <th className="py-2.5 px-3">Amount</th>
-                <th className="py-2.5 px-3">Terms & Logic</th>
-                <th className="py-2.5 px-3">Due Day</th>
-                <th className="py-2.5 px-3">Status</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-800/60">
-              {SAMPLE_OBLIGATIONS.map(ob => (
-                <tr key={ob.id} className="hover:bg-gray-800/40 transition-colors">
-                  <td className="py-3 px-3 text-gray-300">{ob.id}</td>
-                  <td className="py-3 px-3 font-semibold text-white">{ob.vendor}</td>
-                  <td className="py-3 px-3 font-bold text-gray-200">${ob.amount.toFixed(2)}</td>
-                  <td className="py-3 px-3 text-gray-400">{ob.terms}</td>
-                  <td className="py-3 px-3 text-purple-400 font-bold">Day {ob.dueDay}</td>
-                  <td className="py-3 px-3">
-                    {ob.status === 'PAID' && (
-                      <span className="px-2 py-0.5 rounded bg-gray-800 text-gray-400 border border-gray-700">
-                        Paid on Day {ob.paidDay}
-                      </span>
-                    )}
-                    {ob.status === 'DISCOUNT_CAPTURED' && (
-                      <span className="px-2 py-0.5 rounded bg-emerald-950 text-emerald-400 border border-emerald-700/50">
-                        Discount Captured ($1,470.00)
-                      </span>
-                    )}
-                    {ob.status === 'SCHEDULED' && (
-                      <span className="px-2 py-0.5 rounded bg-blue-950 text-blue-400 border border-blue-700/50">
-                        Scheduled (Day {ob.dueDay})
-                      </span>
-                    )}
-                    {ob.status === 'PENDING' && (
-                      <span className="px-2 py-0.5 rounded bg-amber-950 text-amber-400 border border-amber-700/50">
-                        Pending Evaluation
-                      </span>
-                    )}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          {/* Feature 2 */}
+          <div className="p-6 rounded-2xl bg-white border border-slate-200/90 shadow-2xs space-y-2.5">
+            <div className="w-9 h-9 rounded-xl bg-teal-50 text-teal-600 flex items-center justify-center font-bold">
+              <Shield className="w-4 h-4" />
+            </div>
+            <h3 className="text-sm font-bold text-slate-900">2. Policy-Enforced Payments</h3>
+            <p className="text-xs text-slate-500 leading-relaxed">
+              Mathematical smart contract rules physically block payments that would breach your protected payroll reserve floor.
+            </p>
+          </div>
+
+          {/* Feature 3 */}
+          <div className="p-6 rounded-2xl bg-white border border-slate-200/90 shadow-2xs space-y-2.5">
+            <div className="w-9 h-9 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center font-bold">
+              <GitCommit className="w-4 h-4" />
+            </div>
+            <h3 className="text-sm font-bold text-slate-900">3. Verifiable Audit Trail</h3>
+            <p className="text-xs text-slate-500 leading-relaxed">
+              Every invoice approval, timing calculus, and transaction hash is cryptographically anchored to Arc Testnet blocks.
+            </p>
+          </div>
         </div>
-      </div>
+      </main>
+
+      {/* Clean Compact Footer */}
+      <footer className="py-6 bg-white border-t border-slate-200 text-xs text-slate-500">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-3">
+          <div className="flex items-center gap-2">
+            <EuthynaLogo size="sm" showWordmark={true} />
+            <span className="text-slate-300">·</span>
+            <span>Intelligent Treasury. Protected Decisions.</span>
+          </div>
+
+          <div className="text-[11px] text-slate-400 flex items-center gap-2">
+            <span>Arc Testnet #5042002</span>
+            <span>·</span>
+            <a
+              href="https://testnet.arcscan.app/address/0xbef6a5ba928fd377fe9add0f516effcc50e0b3f6"
+              target="_blank"
+              rel="noreferrer"
+              className="text-blue-600 hover:underline flex items-center gap-0.5"
+            >
+              <span>Verified Vault</span>
+              <ExternalLink className="w-2.5 h-2.5" />
+            </a>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }

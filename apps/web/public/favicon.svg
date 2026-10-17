@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" fill="none">
+  <defs>
+    <linearGradient id="shieldBg" x1="16" y1="12" x2="112" y2="120" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#0F172A"/>
+      <stop offset="100%" stop-color="#1E293B"/>
+    </linearGradient>
+    <linearGradient id="shieldBorder" x1="16" y1="8" x2="112" y2="120" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#38BDF8"/>
+      <stop offset="50%" stop-color="#0D9488"/>
+      <stop offset="100%" stop-color="#2563EB"/>
+    </linearGradient>
+    <linearGradient id="coinGrad" x1="40" y1="36" x2="88" y2="92" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#0D9488" stop-opacity="0.25"/>
+      <stop offset="100%" stop-color="#0284C7" stop-opacity="0.1"/>
+    </linearGradient>
+    <linearGradient id="coinStroke" x1="40" y1="36" x2="88" y2="92" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#14B8A6"/>
+      <stop offset="100%" stop-color="#38BDF8"/>
+    </linearGradient>
+    <linearGradient id="arrowGrad" x1="44" y1="84" x2="88" y2="40" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#0D9488"/>
+      <stop offset="50%" stop-color="#06B6D4"/>
+      <stop offset="100%" stop-color="#38BDF8"/>
+    </linearGradient>
+  </defs>
+
+  <path d="M64 12C88 12 110 21 110 40C110 78 85 106 64 116C43 106 18 78 18 40C18 21 40 12 64 12Z" 
+        fill="url(#shieldBg)" 
+        stroke="url(#shieldBorder)" 
+        stroke-width="3.5" 
+        stroke-linejoin="round"/>
+
+  <circle cx="64" cy="58" r="28" 
+          fill="url(#coinGrad)" 
+          stroke="url(#coinStroke)" 
+          stroke-width="2.5" 
+          stroke-dasharray="4 2"/>
+
+  <path d="M46 76L60 62L70 70L86 46M86 46H74M86 46V58" 
+        stroke="url(#arrowGrad)" 
+        stroke-width="4.5" 
+        stroke-linecap="round" 
+        stroke-linejoin="round"/>
+
+  <circle cx="86" cy="46" r="3" fill="#38BDF8"/>
+</svg>
