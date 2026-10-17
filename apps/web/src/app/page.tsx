@@ -246,7 +246,42 @@ export default function HomePage() {
           )}
 
           {/* Error banner */}
-          {connectError && (
+          {connectError === 'METAMASK_NOT_FOUND' ? (
+            <div
+              className="p-4 rounded-2xl text-xs space-y-2 text-left w-full animate-in fade-in"
+              style={{ background: 'rgba(245,158,11,0.10)', border: '1px solid rgba(245,158,11,0.25)', color: '#FCD34D' }}
+            >
+              <div className="flex items-center gap-1.5 font-bold text-amber-300">
+                <AlertTriangle className="w-4 h-4 shrink-0" />
+                <span>MetaMask Not Detected</span>
+              </div>
+              <p className="text-[11px] leading-relaxed" style={{ color: '#FDE68A' }}>
+                We couldn't detect the MetaMask browser extension. Install MetaMask to connect your real wallet, or test with the Simulated Demo Wallet.
+              </p>
+              <div className="flex items-center gap-2 pt-1">
+                <a
+                  href="https://metamask.io/download/"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="px-3 py-1.5 rounded-xl font-semibold text-xs flex items-center gap-1 transition-all"
+                  style={{ background: '#F59E0B', color: '#000' }}
+                >
+                  <span>Install MetaMask</span>
+                  <ExternalLink className="w-3 h-3" />
+                </a>
+                <button
+                  onClick={async () => {
+                    const ok = await connect(true);
+                    if (ok) router.push('/dashboard');
+                  }}
+                  className="px-3 py-1.5 rounded-xl font-semibold text-xs transition-colors"
+                  style={{ background: 'rgba(255,255,255,0.06)', color: '#F0F4FF', border: '1px solid rgba(255,255,255,0.12)' }}
+                >
+                  Use Demo Wallet
+                </button>
+              </div>
+            </div>
+          ) : connectError ? (
             <div
               className="p-3 rounded-xl text-xs flex items-center gap-2 text-left w-full"
               style={{ background: 'rgba(239,68,68,0.10)', border: '1px solid rgba(239,68,68,0.20)', color: '#F87171' }}
@@ -254,7 +289,7 @@ export default function HomePage() {
               <AlertCircle className="w-4 h-4 shrink-0" style={{ color: '#EF4444' }} />
               <span>{connectError}</span>
             </div>
-          )}
+          ) : null}
 
           <span className="text-[11px]" style={{ color: '#374151' }}>
             Non-custodial · Arc Testnet · Native USDC

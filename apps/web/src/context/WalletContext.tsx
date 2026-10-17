@@ -39,7 +39,8 @@ interface WalletContextType {
   activeRole: TreasuryRole;
   usdcBalance: string;
   connectError: string | null;
-  connect: () => Promise<boolean>;
+  hasMetaMask: boolean;
+  connect: (forceDemo?: boolean) => Promise<boolean>;
   disconnect: () => Promise<void>;
   switchToArc: () => Promise<void>;
   setDemoRole: (role: TreasuryRole) => void;
@@ -48,6 +49,26 @@ interface WalletContextType {
 
 const WalletContext = createContext<WalletContextType | undefined>(undefined);
 
+/**
+ * Safely resolves the injected Web3 provider (specifically MetaMask if multiple extensions exist)
+ */
+export function getInjectedProvider(): any {
+  if (typeof window === 'undefined') return null;
+  const w = window as any;
+  if (!w.ethereum) return null;
+
+  // Handle multi-wallet setups (MetaMask, Phantom, Coinbase Wallet)
+  if (Array.isArray(w.ethereum.providers) && w.ethereum.providers.length > 0) {
+    const metaMask = w.ethereum.providers.find((p: any) => p.isMetaMask && !p.isPhantom);
+    if (metaMask) return metaMask;
+    const anyMetaMask = w.ethereum.providers.find((p: any) => p.isMetaMask);
+    if (anyMetaMask) return anyMetaMask;
+    return w.ethereum.providers[0];
+  }
+
+  return w.ethereum;
+}
+
 export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [address, setAddress] = useState<string | null>(null);
   const [chainId, setChainId] = useState<number | null>(null);
@@ -55,11 +76,28 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   const [connectError, setConnectError] = useState<string | null>(null);
   const [activeRole, setActiveRole] = useState<TreasuryRole>('OWNER');
   const [usdcBalance, setUsdcBalance] = useState<string>('24,500.00');
+  const [hasMetaMask, setHasMetaMask] = useState<boolean>(false);
 
   const clearConnectError = () => setConnectError(null);
 
   const isConnected = !!address;
   const isArcTestnet = chainId === ARC_TESTNET_CHAIN_ID;
+
+  // Detect if MetaMask is installed
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const checkProvider = () => {
+      const p = getInjectedProvider();
+      setHasMetaMask(!!p);
+    };
+    checkProvider();
+
+    // Listen for provider injection event from MetaMask
+    window.addEventListener('ethereum#initialized', checkProvider, { once: true });
+    return () => {
+      window.removeEventListener('ethereum#initialized', checkProvider);
+    };
+  }, []);
 
   // Determine role based on address or override
   const detectRole = useCallback((addr: string): TreasuryRole => {
@@ -73,7 +111,7 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 
   const refreshBalance = useCallback(async (addr: string) => {
     try {
-      const ethereum = (window as unknown as { ethereum?: any }).ethereum;
+      const ethereum = getInjectedProvider();
       if (ethereum && chainId === ARC_TESTNET_CHAIN_ID) {
         const balHex = await ethereum.request({
           method: 'eth_getBalance',
@@ -96,13 +134,13 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   // Sync chainId and accounts if window.ethereum exists
   useEffect(() => {
     if (typeof window === 'undefined') return;
-    const ethereum = (window as unknown as { ethereum?: any }).ethereum;
+    const ethereum = getInjectedProvider();
 
     const isManuallyDisconnected = localStorage.getItem('euthyna_wallet_disconnected') === 'true';
 
     if (!ethereum) {
       if (!isManuallyDisconnected) {
-        // Restore previously saved demo session if any
+        // Restore previously saved session if any
         const savedAddress = localStorage.getItem('euthyna_wallet_address');
         const savedRole = localStorage.getItem('euthyna_wallet_role') as TreasuryRole;
         if (savedAddress) {
@@ -116,7 +154,6 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 
     const handleAccountsChanged = (accounts: string[]) => {
       if (accounts && accounts.length > 0) {
-        // User actively selected/switched account in MetaMask
         localStorage.removeItem('euthyna_wallet_disconnected');
         const addr = accounts[0];
         setAddress(addr);
@@ -139,7 +176,7 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     ethereum.on?.('accountsChanged', handleAccountsChanged);
     ethereum.on?.('chainChanged', handleChainChanged);
 
-    // Initial check: only auto-connect if user has not explicitly clicked disconnect
+    // Initial check: if already connected in MetaMask, sync the account
     if (!isManuallyDisconnected) {
       ethereum
         .request?.({ method: 'eth_accounts' })
@@ -165,9 +202,8 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   }, [detectRole, refreshBalance]);
 
   const switchToArc = async () => {
-    const ethereum = (window as unknown as { ethereum?: any }).ethereum;
+    const ethereum = getInjectedProvider();
     if (!ethereum) {
-      // Simulate switch in demo mode
       setChainId(ARC_TESTNET_CHAIN_ID);
       return;
     }
@@ -180,7 +216,7 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       setChainId(ARC_TESTNET_CHAIN_ID);
     } catch (switchError: any) {
       // Error code 4902 indicates chain not yet added to wallet
-      if (switchError.code === 4902 || switchError?.message?.includes('Unrecognized')) {
+      if (switchError.code === 4902 || switchError?.message?.includes('Unrecognized') || switchError?.message?.includes('4902')) {
         try {
           await ethereum.request({
             method: 'wallet_addEthereumChain',
@@ -188,7 +224,7 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
           });
           setChainId(ARC_TESTNET_CHAIN_ID);
         } catch (addError) {
-          console.error('Failed to add Arc Testnet:', addError);
+          console.error('Failed to add Arc Testnet to MetaMask:', addError);
         }
       } else {
         console.error('Failed to switch to Arc Testnet:', switchError);
@@ -196,58 +232,70 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     }
   };
 
-  const connect = async (): Promise<boolean> => {
+  const connect = async (forceDemo: boolean = false): Promise<boolean> => {
     setIsConnecting(true);
     setConnectError(null);
     if (typeof window !== 'undefined') {
       localStorage.removeItem('euthyna_wallet_disconnected');
     }
-    const ethereum = (window as unknown as { ethereum?: any }).ethereum;
+
+    const ethereum = getInjectedProvider();
+
+    // If MetaMask is not installed and user didn't request demo mode
+    if (!ethereum && !forceDemo) {
+      setIsConnecting(false);
+      setConnectError('METAMASK_NOT_FOUND');
+      return false;
+    }
+
+    // Force demo mode fallback
+    if (forceDemo || !ethereum) {
+      const demoAddr = ROLE_ADDRESSES.OWNER;
+      setAddress(demoAddr);
+      setChainId(ARC_TESTNET_CHAIN_ID);
+      setActiveRole('OWNER');
+      localStorage.setItem('euthyna_wallet_address', demoAddr);
+      localStorage.setItem('euthyna_wallet_role', 'OWNER');
+      setIsConnecting(false);
+      return true;
+    }
 
     try {
-      if (ethereum) {
-        const accounts: string[] = await ethereum.request({
-          method: 'eth_requestAccounts',
-        });
-        if (accounts && accounts.length > 0) {
-          const addr = accounts[0];
-          setAddress(addr);
-          localStorage.setItem('euthyna_wallet_address', addr);
+      // Request real MetaMask access
+      const accounts: string[] = await ethereum.request({
+        method: 'eth_requestAccounts',
+      });
 
-          const cidHex: string = await ethereum.request({ method: 'eth_chainId' });
-          const currentCid = parseInt(cidHex, 16);
-          setChainId(currentCid);
+      if (accounts && accounts.length > 0) {
+        const addr = accounts[0];
+        setAddress(addr);
+        localStorage.setItem('euthyna_wallet_address', addr);
 
-          if (currentCid !== ARC_TESTNET_CHAIN_ID) {
-            try {
-              await switchToArc();
-            } catch {
-              // Non-fatal: wallet connected, user can click Switch to Arc
-            }
+        const cidHex: string = await ethereum.request({ method: 'eth_chainId' });
+        const currentCid = parseInt(cidHex, 16);
+        setChainId(currentCid);
+
+        if (currentCid !== ARC_TESTNET_CHAIN_ID) {
+          try {
+            await switchToArc();
+          } catch {
+            // User can switch manually
           }
-
-          setActiveRole(detectRole(addr));
-          refreshBalance(addr);
-          return true;
-        } else {
-          setConnectError('No accounts returned by MetaMask.');
-          return false;
         }
-      } else {
-        // Fallback for browsers/environments without Web3 extensions (MetaMask not installed)
-        // Auto-connect to Arc Owner role wallet with full demo capabilities
-        const demoAddr = ROLE_ADDRESSES.OWNER;
-        setAddress(demoAddr);
-        setChainId(ARC_TESTNET_CHAIN_ID);
-        setActiveRole('OWNER');
-        localStorage.setItem('euthyna_wallet_address', demoAddr);
-        localStorage.setItem('euthyna_wallet_role', 'OWNER');
+
+        setActiveRole(detectRole(addr));
+        refreshBalance(addr);
         return true;
+      } else {
+        setConnectError('No accounts returned by MetaMask. Please unlock your wallet and try again.');
+        return false;
       }
     } catch (err: any) {
-      console.warn('Wallet connection error:', err);
+      console.warn('MetaMask connection error:', err);
       if (err.code === 4001 || err?.message?.toLowerCase().includes('reject') || err?.message?.toLowerCase().includes('user denied')) {
-        setConnectError('MetaMask connection request was rejected. Click Connect Wallet to try again.');
+        setConnectError('MetaMask connection request was rejected. Please click Connect and approve the prompt.');
+      } else if (err.code === -32002) {
+        setConnectError('A connection request is already pending in MetaMask. Please open your MetaMask extension to approve.');
       } else {
         setConnectError(err?.message || 'Failed to connect MetaMask.');
       }
@@ -270,7 +318,7 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       localStorage.setItem('euthyna_wallet_disconnected', 'true');
     }
 
-    const ethereum = (window as unknown as { ethereum?: any }).ethereum;
+    const ethereum = getInjectedProvider();
     if (ethereum) {
       try {
         await ethereum.request({
@@ -278,23 +326,13 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
           params: [{ eth_accounts: {} }],
         });
       } catch {
-        // wallet_revokePermissions is supported on modern MetaMask, safe to ignore if unsupported
+        // Safe to ignore if unsupported
       }
     }
   };
 
   const setDemoRole = (role: TreasuryRole) => {
-    if (typeof window !== 'undefined') {
-      localStorage.removeItem('euthyna_wallet_disconnected');
-    }
     setActiveRole(role);
-    if (role === 'OWNER') setAddress(ROLE_ADDRESSES.OWNER);
-    else if (role === 'REGISTRAR') setAddress(ROLE_ADDRESSES.REGISTRAR);
-    else if (role === 'AGENT') setAddress(ROLE_ADDRESSES.AGENT);
-    else if (role === 'GUARDIAN') setAddress(ROLE_ADDRESSES.GUARDIAN);
-    else setAddress('0x71C8364675A74F674482BC9D40455B2E8B991F24');
-
-    if (!chainId) setChainId(ARC_TESTNET_CHAIN_ID);
     if (typeof window !== 'undefined') {
       localStorage.setItem('euthyna_wallet_role', role);
     }
@@ -311,6 +349,7 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         activeRole,
         usdcBalance,
         connectError,
+        hasMetaMask,
         connect,
         disconnect,
         switchToArc,
@@ -323,7 +362,7 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   );
 };
 
-export const useWallet = () => {
+export const useWallet = (): WalletContextType => {
   const context = useContext(WalletContext);
   if (!context) {
     throw new Error('useWallet must be used within a WalletProvider');

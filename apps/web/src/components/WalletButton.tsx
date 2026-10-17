@@ -72,29 +72,90 @@ export const WalletButton: React.FC = () => {
     }
   };
 
+  const { clearConnectError, connectError } = useWallet();
+
   /* ── Not connected ── */
   if (!isConnected) {
     return (
-      <button
-        onClick={connect}
-        disabled={isConnecting}
-        className="flex items-center gap-2 px-3.5 py-1.5 rounded-xl text-sm font-semibold text-white transition-all active:scale-95 disabled:opacity-50"
-        style={{ background: '#8B5CF6' }}
-        onMouseEnter={e => { if (!isConnecting) (e.currentTarget as HTMLElement).style.background = '#7C3AED'; }}
-        onMouseLeave={e => { if (!isConnecting) (e.currentTarget as HTMLElement).style.background = '#8B5CF6'; }}
-      >
-        {isConnecting ? (
-          <>
-            <Loader2 className="w-3.5 h-3.5 animate-spin" />
-            <span className="text-xs">Connecting…</span>
-          </>
-        ) : (
-          <>
-            <Wallet className="w-3.5 h-3.5" />
-            <span className="text-xs">Connect Wallet</span>
-          </>
+      <div className="relative">
+        <button
+          onClick={() => connect()}
+          disabled={isConnecting}
+          className="flex items-center gap-2 px-3.5 py-1.5 rounded-xl text-sm font-semibold text-white transition-all active:scale-95 disabled:opacity-50"
+          style={{ background: '#8B5CF6' }}
+          onMouseEnter={e => { if (!isConnecting) (e.currentTarget as HTMLElement).style.background = '#7C3AED'; }}
+          onMouseLeave={e => { if (!isConnecting) (e.currentTarget as HTMLElement).style.background = '#8B5CF6'; }}
+        >
+          {isConnecting ? (
+            <>
+              <Loader2 className="w-3.5 h-3.5 animate-spin" />
+              <span className="text-xs">Connecting…</span>
+            </>
+          ) : (
+            <>
+              <Wallet className="w-3.5 h-3.5" />
+              <span className="text-xs">Connect Wallet</span>
+            </>
+          )}
+        </button>
+
+        {connectError && (
+          <div
+            className="absolute right-0 mt-2 w-72 rounded-2xl p-4 z-50 text-xs space-y-2.5 animate-fade-in"
+            style={{
+              background: '#141A27',
+              border: '1px solid rgba(245,158,11,0.3)',
+              boxShadow: '0 20px 60px rgba(0,0,0,0.6)',
+            }}
+          >
+            {connectError === 'METAMASK_NOT_FOUND' ? (
+              <>
+                <div className="flex items-center justify-between font-bold text-amber-400">
+                  <span className="flex items-center gap-1.5">
+                    <AlertTriangle className="w-4 h-4" />
+                    MetaMask Not Found
+                  </span>
+                  <button onClick={clearConnectError} className="text-slate-400 hover:text-white text-xs">✕</button>
+                </div>
+                <p className="text-[11px] leading-relaxed" style={{ color: '#8B95B0' }}>
+                  MetaMask extension was not detected in this browser. Install MetaMask to connect your real wallet, or use a simulated demo wallet.
+                </p>
+                <div className="flex items-center gap-2 pt-1">
+                  <a
+                    href="https://metamask.io/download/"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="flex-1 py-1.5 text-center rounded-xl font-semibold text-xs transition-all"
+                    style={{ background: '#F59E0B', color: '#000' }}
+                  >
+                    Install MetaMask
+                  </a>
+                  <button
+                    onClick={() => connect(true)}
+                    className="flex-1 py-1.5 rounded-xl font-semibold text-xs transition-colors"
+                    style={{ background: 'rgba(255,255,255,0.06)', color: '#F0F4FF', border: '1px solid rgba(255,255,255,0.12)' }}
+                  >
+                    Demo Wallet
+                  </button>
+                </div>
+              </>
+            ) : (
+              <>
+                <div className="flex items-center justify-between font-bold text-rose-400">
+                  <span className="flex items-center gap-1.5">
+                    <AlertTriangle className="w-4 h-4" />
+                    Connection Notice
+                  </span>
+                  <button onClick={clearConnectError} className="text-slate-400 hover:text-white text-xs">✕</button>
+                </div>
+                <p className="text-[11px] leading-relaxed" style={{ color: '#8B95B0' }}>
+                  {connectError}
+                </p>
+              </>
+            )}
+          </div>
         )}
-      </button>
+      </div>
     );
   }
 

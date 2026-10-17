@@ -101,12 +101,20 @@ export function getPublicClient(): PublicClient {
 
 export function getBrowserWalletClient(): WalletClient | null {
   if (typeof window === 'undefined') return null;
-  const ethereum = (window as unknown as { ethereum?: any }).ethereum;
-  if (!ethereum) return null;
+  const w = window as any;
+  if (!w.ethereum) return null;
+
+  // Resolve MetaMask if multiple extensions are present
+  let provider = w.ethereum;
+  if (Array.isArray(w.ethereum.providers) && w.ethereum.providers.length > 0) {
+    provider = w.ethereum.providers.find((p: any) => p.isMetaMask && !p.isPhantom) ||
+               w.ethereum.providers.find((p: any) => p.isMetaMask) ||
+               w.ethereum.providers[0];
+  }
 
   return createWalletClient({
     chain: arcTestnetChain,
-    transport: custom(ethereum),
+    transport: custom(provider),
   });
 }
 
