@@ -236,12 +236,12 @@ export default function HomePage() {
             <span>Arc Testnet #5042002</span>
             <span>·</span>
             <a
-              href="https://testnet.arcscan.app/address/0xbef6a5ba928fd377fe9add0f516effcc50e0b3f6"
+              href="https://explorer.testnet.arc.io/address/0x6ffdf10d5165510b5dd51f69cce7c52df2eaab01"
               target="_blank"
               rel="noreferrer"
               className="text-blue-600 hover:underline flex items-center gap-0.5"
             >
-              <span>Verified Vault</span>
+              <span>Verified Vault (0x6ffd...ab01)</span>
               <ExternalLink className="w-2.5 h-2.5" />
             </a>
           </div>

@@ -88,7 +88,7 @@ export default function ApprovalsPage() {
   const { isConnected, activeRole, address, isArcTestnet, switchToArc, setDemoRole } = useWallet();
 
   const primaryVaultAddress = (process.env.NEXT_PUBLIC_VAULT_ADDRESS ||
-    '0xbef6a5ba928fd377fe9add0f516effcc50e0b3f6') as Address;
+    '0x6ffdf10d5165510b5dd51f69cce7c52df2eaab01') as Address;
 
   // Load vault state
   const refreshVault = async () => {
@@ -325,7 +325,7 @@ export default function ApprovalsPage() {
 
           {txState.txHash && (
             <a
-              href={`https://testnet.arcscan.app/tx/${txState.txHash}`}
+              href={`https://explorer.testnet.arc.io/tx/${txState.txHash}`}
               target="_blank"
               rel="noreferrer"
               className="px-3 py-1.5 rounded-lg bg-white border border-blue-200 text-blue-700 hover:bg-blue-50 text-xs font-semibold flex items-center gap-1 self-start sm:self-auto shrink-0 shadow-xs"

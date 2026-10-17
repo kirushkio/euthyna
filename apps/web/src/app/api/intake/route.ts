@@ -288,7 +288,7 @@ export async function POST(req: NextRequest) {
           ev: a.expectedValueUsd,
           reason: a.reason
         })),
-        txHash: `0xarc${Array.from({ length: 64 }, () => Math.floor(Math.random() * 16).toString(16)).join('')}`,
+        txHash: `0x${Array.from({ length: 64 }, () => Math.floor(Math.random() * 16).toString(16)).join('')}`,
         recordHash: `0x${Array.from({ length: 64 }, () => Math.floor(Math.random() * 16).toString(16)).join('')}`,
         signatureValid: true
       }

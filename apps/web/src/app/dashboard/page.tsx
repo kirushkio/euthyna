@@ -34,7 +34,7 @@ export default function DashboardPage() {
   const [showExplainer, setShowExplainer] = useState(false);
   const [paymentExecuted, setPaymentExecuted] = useState(false);
 
-  const vaultAddress = '0xbef6a5ba928fd377fe9add0f516effcc50e0b3f6' as Address;
+  const vaultAddress = (process.env.NEXT_PUBLIC_VAULT_ADDRESS || '0x6ffdf10d5165510b5dd51f69cce7c52df2eaab01') as Address;
 
   useEffect(() => {
     let isMounted = true;
@@ -326,12 +326,12 @@ export default function DashboardPage() {
           <span className="w-2 h-2 rounded-full bg-emerald-500" />
           <span>Onchain Vault:</span>
           <a
-            href="https://testnet.arcscan.app/address/0xbef6a5ba928fd377fe9add0f516effcc50e0b3f6"
+            href={`https://explorer.testnet.arc.io/address/${vaultAddress}`}
             target="_blank"
             rel="noreferrer"
             className="text-blue-600 hover:underline font-mono font-medium flex items-center gap-0.5"
           >
-            <span>0xbef6a5ba928fd377fe9add0f516effcc50e0b3f6</span>
+            <span>{vaultAddress}</span>
             <ExternalLink className="w-3 h-3" />
           </a>
         </div>

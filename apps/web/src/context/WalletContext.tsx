@@ -14,7 +14,7 @@ export const ARC_CHAIN_CONFIG = {
     decimals: 18,
   },
   rpcUrls: ['https://rpc.testnet.arc.network'],
-  blockExplorerUrls: ['https://testnet.arcscan.app'],
+  blockExplorerUrls: ['https://explorer.testnet.arc.io'],
 };
 
 // Known demo role addresses from deployments.json

@@ -14,8 +14,10 @@ import {
 
 export const ARC_TESTNET_CHAIN_ID = 5042002;
 export const ARC_RPC_URL = process.env.NEXT_PUBLIC_ARC_RPC_URL || 'https://rpc.testnet.arc.network';
-export const ARC_EXPLORER_URL = process.env.NEXT_PUBLIC_ARC_EXPLORER_URL || 'https://testnet.arcscan.app';
+export const ARC_EXPLORER_URL = process.env.NEXT_PUBLIC_ARC_EXPLORER_URL || 'https://explorer.testnet.arc.io';
 export const USDC_ADDRESS = (process.env.NEXT_PUBLIC_USDC_ADDRESS || '0x3600000000000000000000000000000000000000') as Address;
+export const DEFAULT_VAULT_ADDRESS = (process.env.NEXT_PUBLIC_VAULT_ADDRESS || '0x6ffdf10d5165510b5dd51f69cce7c52df2eaab01') as Address;
+export const DEPLOYMENT_TX = '0x604f311ef11471e1fca60d6d4182d2cda4519f4decc50f806431ef3aa99308fd';
 
 export const arcTestnetChain = defineChain({
   id: ARC_TESTNET_CHAIN_ID,

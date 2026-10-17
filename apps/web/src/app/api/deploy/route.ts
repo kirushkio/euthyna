@@ -74,7 +74,7 @@ export async function POST(req: Request) {
       vaultAddress,
       txHash,
       isRealBroadcast: true,
-      explorerUrl: `https://testnet.arcscan.io/address/${vaultAddress}`
+      explorerUrl: `https://explorer.testnet.arc.io/address/${vaultAddress}`
     });
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 });

@@ -175,11 +175,11 @@ export const WalletButton: React.FC = () => {
                 </button>
                 {address && (
                   <a
-                    href={`https://testnet.arcscan.app/address/${address}`}
+                    href={`https://explorer.testnet.arc.io/address/${address}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="p-1 rounded hover:bg-slate-200 text-slate-500 hover:text-slate-800 transition-colors"
-                    title="View on ArcScan"
+                    title="View on Arc Explorer"
                   >
                     <ExternalLink className="w-3.5 h-3.5" />
                   </a>

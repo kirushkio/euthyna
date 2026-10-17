@@ -39,7 +39,7 @@ const INITIAL_BLOCKS: VerifiedBlock[] = [
     computedHash: '0x1928471029471029471029471029471029471029471029471029471029471029',
     storedHash: '0x1928471029471029471029471029471029471029471029471029471029471029',
     signatureStatus: 'VALID',
-    anchorTx: '0xarc1029471029471029471029471029471029471029471029471029471029471029',
+    anchorTx: '0x604f311ef11471e1fca60d6d4182d2cda4519f4decc50f806431ef3aa99308fd',
     isValid: true
   },
   {
@@ -51,7 +51,7 @@ const INITIAL_BLOCKS: VerifiedBlock[] = [
     computedHash: '0x8194719471947194719471947194719471947194719471947194719471947194',
     storedHash: '0x8194719471947194719471947194719471947194719471947194719471947194',
     signatureStatus: 'VALID',
-    anchorTx: '0xarc71948bbcae001847192847102847102847102847102847102847102847102',
+    anchorTx: '0x604f311ef11471e1fca60d6d4182d2cda4519f4decc50f806431ef3aa99308fd',
     isValid: true
   },
   {
@@ -63,7 +63,7 @@ const INITIAL_BLOCKS: VerifiedBlock[] = [
     computedHash: '0x3f9821bb49a7102049e7710291938abf01948194819481948194819481948194',
     storedHash: '0x3f9821bb49a7102049e7710291938abf01948194819481948194819481948194',
     signatureStatus: 'VALID',
-    anchorTx: '0xarc91a82fbc0017a42ef3910cbe88200f681a942004bbde0199ac718a992019',
+    anchorTx: '0x604f311ef11471e1fca60d6d4182d2cda4519f4decc50f806431ef3aa99308fd',
     isValid: true
   },
   {
@@ -75,7 +75,7 @@ const INITIAL_BLOCKS: VerifiedBlock[] = [
     computedHash: '0x9920184719284710294710294710294710294710294710294710294710294710',
     storedHash: '0x9920184719284710294710294710294710294710294710294710294710294710',
     signatureStatus: 'VALID',
-    anchorTx: '0xarc8829471029471029471029471029471029471029471029471029471029471029',
+    anchorTx: '0x604f311ef11471e1fca60d6d4182d2cda4519f4decc50f806431ef3aa99308fd',
     isValid: true
   },
   {
@@ -87,7 +87,7 @@ const INITIAL_BLOCKS: VerifiedBlock[] = [
     computedHash: '0x4482019284710294710294710294710294710294710294710294710294710294',
     storedHash: '0x4482019284710294710294710294710294710294710294710294710294710294',
     signatureStatus: 'VALID',
-    anchorTx: '0xarc4429471029471029471029471029471029471029471029471029471029471029',
+    anchorTx: '0x604f311ef11471e1fca60d6d4182d2cda4519f4decc50f806431ef3aa99308fd',
     isValid: true
   }
 ];
@@ -255,7 +255,7 @@ export default function VerifyLedgerPage() {
                   </div>
 
                   <a
-                    href={`https://testnet.arcscan.app/tx/${block.anchorTx}`}
+                    href={`https://explorer.testnet.arc.io/tx/${block.anchorTx}`}
                     target="_blank"
                     rel="noreferrer"
                     className="text-blue-600 hover:underline flex items-center gap-1 font-sans font-medium"

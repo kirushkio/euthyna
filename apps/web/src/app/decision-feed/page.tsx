@@ -29,7 +29,7 @@ const DECISIONS = [
     technicalProof: {
       rule: 'Rule G4 (Exact Discount Calculation) & Rule G6 (Reserve Floor Preserved)',
       hash: '0x3f9821bb49a7102049e7710291938abf01948194819481948194819481948194',
-      txHash: '0xarc91a82fbc0017a42ef3910cbe88200f681a942004bbde0199ac718a992019'
+      txHash: '0x604f311ef11471e1fca60d6d4182d2cda4519f4decc50f806431ef3aa99308fd'
     }
   },
   {
@@ -46,7 +46,7 @@ const DECISIONS = [
     technicalProof: {
       rule: 'Rule G2 (Unpaid Due Date) & Rule G5 (Daily Limit Respected)',
       hash: '0x8194719471947194719471947194719471947194719471947194719471947194',
-      txHash: '0xarc71948bbcae001847192847102847102847102847102847102847102847102'
+      txHash: '0x604f311ef11471e1fca60d6d4182d2cda4519f4decc50f806431ef3aa99308fd'
     }
   },
   {
@@ -63,7 +63,7 @@ const DECISIONS = [
     technicalProof: {
       rule: 'Rule G8 (Venue Enabled & 50% Safe Cap Respected)',
       hash: '0x1928471029471029471029471029471029471029471029471029471029471029',
-      txHash: '0xarc1029471029471029471029471029471029471029471029471029471029471029'
+      txHash: '0x604f311ef11471e1fca60d6d4182d2cda4519f4decc50f806431ef3aa99308fd'
     }
   }
 ];
@@ -139,7 +139,7 @@ export default function DecisionFeedPage() {
                 </button>
 
                 <a
-                  href={`https://testnet.arcscan.app/tx/${dec.technicalProof.txHash}`}
+                  href={`https://explorer.testnet.arc.io/tx/${dec.technicalProof.txHash}`}
                   target="_blank"
                   rel="noreferrer"
                   className="text-blue-600 hover:underline flex items-center gap-1 font-medium font-mono text-[11px]"

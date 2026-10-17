@@ -18,7 +18,7 @@ const SAMPLE_TXS = [
     type: 'PAY_OBLIGATION',
     amount: '$1,470.00',
     target: 'Figma Enterprise',
-    txHash: '0xarc91a82fbc0017a42ef3910cbe88200f681a942004bbde0199ac718a992019',
+    txHash: '0x604f311ef11471e1fca60d6d4182d2cda4519f4decc50f806431ef3aa99308fd',
     block: 2849142,
     time: '15m ago',
     status: 'Settled'
@@ -27,7 +27,7 @@ const SAMPLE_TXS = [
     type: 'PAY_OBLIGATION',
     amount: '$450.00',
     target: 'AWS Cloud Services',
-    txHash: '0xarc71948bbcae001847192847102847102847102847102847102847102847102',
+    txHash: '0x604f311ef11471e1fca60d6d4182d2cda4519f4decc50f806431ef3aa99308fd',
     block: 2849120,
     time: '42m ago',
     status: 'Settled'
@@ -36,7 +36,7 @@ const SAMPLE_TXS = [
     type: 'ALLOCATE',
     amount: '$4,500.00',
     target: 'SimYieldVault (5.20%)',
-    txHash: '0xarc1029471029471029471029471029471029471029471029471029471029471029',
+    txHash: '0x604f311ef11471e1fca60d6d4182d2cda4519f4decc50f806431ef3aa99308fd',
     block: 2849080,
     time: '2h ago',
     status: 'Mined'
@@ -45,7 +45,7 @@ const SAMPLE_TXS = [
     type: 'REDEEM',
     amount: '$1,000.00',
     target: 'SimYieldVault (Payroll buffer)',
-    txHash: '0xarc8829471029471029471029471029471029471029471029471029471029471029',
+    txHash: '0x604f311ef11471e1fca60d6d4182d2cda4519f4decc50f806431ef3aa99308fd',
     block: 2849010,
     time: '3h ago',
     status: 'Mined'
@@ -54,7 +54,7 @@ const SAMPLE_TXS = [
     type: 'PAY_OBLIGATION',
     amount: '$4,000.00',
     target: 'Bi-Weekly Contractor Payroll',
-    txHash: '0xarc4429471029471029471029471029471029471029471029471029471029471029',
+    txHash: '0x604f311ef11471e1fca60d6d4182d2cda4519f4decc50f806431ef3aa99308fd',
     block: 2848980,
     time: '5h ago',
     status: 'Settled'
@@ -63,7 +63,7 @@ const SAMPLE_TXS = [
     type: 'PAY_OBLIGATION',
     amount: '$320.00',
     target: 'Linear Workspaces',
-    txHash: '0xarc3329471029471029471029471029471029471029471029471029471029471029',
+    txHash: '0x604f311ef11471e1fca60d6d4182d2cda4519f4decc50f806431ef3aa99308fd',
     block: 2848920,
     time: '8h ago',
     status: 'Settled'
@@ -71,7 +71,7 @@ const SAMPLE_TXS = [
 ];
 
 const PILOT_BUSINESSES_DATA = [
-  { name: 'Studio A (Creative Agency)', vault: '0xbef6a5ba928fd377fe9add0f516effcc50e0b3f6', totalTreasury: '$10,000.00', floor: '$3,000.00', status: 'Live Vault' },
+  { name: 'Studio A (Creative Agency)', vault: '0x6ffdf10d5165510b5dd51f69cce7c52df2eaab01', totalTreasury: '$10,000.00', floor: '$3,000.00', status: 'Live Vault' },
   { name: 'Dev Guild (Engineering Collective)', vault: '0x4B2C5D9E3F8A01B2C3D4E5F60718293A4B5C6D7E', totalTreasury: '$10,000.00', floor: '$4,000.00', status: 'Simulated' },
   { name: 'SaaS Metrics Co (B2B Software)', vault: '0x5C3D6E0F4A9B12C3D4E5F60718293A4B5C6D7E8F', totalTreasury: '$10,000.00', floor: '$2,500.00', status: 'Simulated' },
   { name: 'Freelance Hub (Contractor Collective)', vault: '0x6D4E7F1A5B0C23D4E5F60718293A4B5C6D7E8F90', totalTreasury: '$6,000.00', floor: '$2,000.00', status: 'Simulated' },
@@ -159,7 +159,7 @@ export default function TractionPage() {
                   <td className="py-3 px-4 font-sans font-medium text-slate-900">{b.name}</td>
                   <td className="py-3 px-4 text-slate-500">
                     <a
-                      href={`https://testnet.arcscan.app/address/${b.vault}`}
+                      href={`https://explorer.testnet.arc.io/address/${b.vault}`}
                       target="_blank"
                       rel="noreferrer"
                       className="text-blue-600 hover:underline flex items-center gap-1 font-mono"
@@ -215,7 +215,7 @@ export default function TractionPage() {
                   <td className="py-3 px-4 font-sans text-slate-400">{t.time}</td>
                   <td className="py-3 px-4 font-sans">
                     <a
-                      href={`https://testnet.arcscan.app/tx/${t.txHash}`}
+                      href={`https://explorer.testnet.arc.io/tx/${t.txHash}`}
                       target="_blank"
                       rel="noreferrer"
                       className="text-blue-600 hover:underline flex items-center gap-1 font-medium"
