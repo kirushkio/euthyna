@@ -297,9 +297,13 @@ export default function DashboardPage() {
 
   useEffect(() => {
     let isMounted = true;
-    readVaultState(vaultAddress).then((state) => {
-      if (isMounted) setLiveVaultState(state);
-    });
+    readVaultState(vaultAddress)
+      .then((state) => {
+        if (isMounted) setLiveVaultState(state);
+      })
+      .catch((err) => {
+        console.warn('Could not read vault state from RPC:', err);
+      });
     return () => { isMounted = false; };
   }, [vaultAddress]);
 

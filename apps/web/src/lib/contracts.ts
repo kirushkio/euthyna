@@ -3,6 +3,7 @@ import {
   createWalletClient,
   custom,
   http,
+  fallback,
   defineChain,
   parseAbi,
   type PublicClient,
@@ -13,7 +14,8 @@ import {
 } from 'viem';
 
 export const ARC_TESTNET_CHAIN_ID = 5042002;
-export const ARC_RPC_URL = process.env.NEXT_PUBLIC_ARC_RPC_URL || 'https://rpc.testnet.arc.network';
+export const ARC_RPC_URL = process.env.NEXT_PUBLIC_ARC_RPC_URL || 'https://arc-testnet.drpc.org';
+export const ARC_BACKUP_RPC_URL = 'https://arc-testnet-rpc.publicnode.com';
 export const ARC_EXPLORER_URL = process.env.NEXT_PUBLIC_ARC_EXPLORER_URL || 'https://explorer.testnet.arc.io';
 export const USDC_ADDRESS = (process.env.NEXT_PUBLIC_USDC_ADDRESS || '0x3600000000000000000000000000000000000000') as Address;
 export const DEFAULT_VAULT_ADDRESS = (process.env.NEXT_PUBLIC_VAULT_ADDRESS || '0x6ffdf10d5165510b5dd51f69cce7c52df2eaab01') as Address;
@@ -28,7 +30,8 @@ export const arcTestnetChain = defineChain({
     symbol: 'USDC',
   },
   rpcUrls: {
-    default: { http: [ARC_RPC_URL] },
+    default: { http: [ARC_RPC_URL, ARC_BACKUP_RPC_URL] },
+    public: { http: [ARC_RPC_URL, ARC_BACKUP_RPC_URL] },
   },
   blockExplorers: {
     default: { name: 'ArcScan', url: ARC_EXPLORER_URL },
@@ -87,7 +90,10 @@ export function getPublicClient(): PublicClient {
   if (!cachedPublicClient) {
     cachedPublicClient = createPublicClient({
       chain: arcTestnetChain,
-      transport: http(ARC_RPC_URL),
+      transport: fallback([
+        http(ARC_RPC_URL, { retryCount: 2, timeout: 8000 }),
+        http(ARC_BACKUP_RPC_URL, { retryCount: 2, timeout: 8000 })
+      ]),
     });
   }
   return cachedPublicClient;

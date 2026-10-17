@@ -3,7 +3,7 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 
 export const ARC_TESTNET_CHAIN_ID = 5042002;
-export const ARC_TESTNET_HEX = '0x4cef12';
+export const ARC_TESTNET_HEX = '0x4cef52';
 
 export const ARC_CHAIN_CONFIG = {
   chainId: ARC_TESTNET_HEX,
@@ -13,7 +13,10 @@ export const ARC_CHAIN_CONFIG = {
     symbol: 'USDC',
     decimals: 18,
   },
-  rpcUrls: ['https://rpc.testnet.arc.network'],
+  rpcUrls: [
+    'https://arc-testnet.drpc.org',
+    'https://arc-testnet-rpc.publicnode.com'
+  ],
   blockExplorerUrls: ['https://explorer.testnet.arc.io'],
 };
 
