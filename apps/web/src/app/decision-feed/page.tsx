@@ -106,7 +106,7 @@ export default function DecisionFeedPage() {
           return (
             <div
               key={dec.id}
-              className="p-6 rounded-2xl space-y-4 transition-all"
+              className="p-6 rounded-2xl space-y-4 card-interactive"
               style={{ background: '#141A27', border: '1px solid rgba(255,255,255,0.08)' }}
             >
               {/* Top Row: Title, Badge, Savings */}

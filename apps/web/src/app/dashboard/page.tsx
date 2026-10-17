@@ -99,28 +99,43 @@ function VaultVisual() {
 
       {/* Floating token badges */}
       <div
-        className="absolute text-[9px] font-bold font-mono px-1.5 py-0.5 rounded-full"
+        className="absolute text-[9px] font-bold font-mono px-2 py-0.5 rounded-full"
         style={{
-          top: '20px', right: '10px',
-          background: 'rgba(16,185,129,0.15)',
-          border: '1px solid rgba(16,185,129,0.30)',
+          top: '16px', right: '12px',
+          background: 'rgba(16,185,129,0.18)',
+          border: '1px solid rgba(16,185,129,0.35)',
           color: '#34D399',
+          boxShadow: '0 0 10px rgba(16,185,129,0.2)',
           animation: 'vaultFloat 5s ease-in-out infinite 1s',
         }}
       >
         USDC
       </div>
       <div
-        className="absolute text-[9px] font-bold font-mono px-1.5 py-0.5 rounded-full"
+        className="absolute text-[9px] font-bold font-mono px-2 py-0.5 rounded-full"
         style={{
-          bottom: '24px', left: '8px',
-          background: 'rgba(34,211,238,0.10)',
-          border: '1px solid rgba(34,211,238,0.20)',
+          bottom: '20px', left: '6px',
+          background: 'rgba(34,211,238,0.15)',
+          border: '1px solid rgba(34,211,238,0.30)',
           color: '#67E8F9',
+          boxShadow: '0 0 10px rgba(34,211,238,0.2)',
           animation: 'vaultFloat 7s ease-in-out infinite 0.5s',
         }}
       >
-        ARC
+        ARC #5042002
+      </div>
+      <div
+        className="absolute text-[9px] font-bold font-mono px-2 py-0.5 rounded-full"
+        style={{
+          bottom: '12px', right: '18px',
+          background: 'rgba(139,92,246,0.18)',
+          border: '1px solid rgba(139,92,246,0.35)',
+          color: '#C4B5FD',
+          boxShadow: '0 0 10px rgba(139,92,246,0.2)',
+          animation: 'vaultFloat 6s ease-in-out infinite 2s',
+        }}
+      >
+        5.2% YIELD
       </div>
     </div>
   );
@@ -137,10 +152,11 @@ interface MetricCardProps {
   iconBg: string;
   isDemo?: boolean;
 }
+
 function MetricCard({ label, value, sub, icon, iconBg, isDemo }: MetricCardProps) {
   return (
     <div
-      className="p-5 rounded-2xl flex flex-col gap-2 transition-all"
+      className="p-5 rounded-2xl flex flex-col gap-2 card-interactive"
       style={{ background: '#141A27', border: '1px solid rgba(255,255,255,0.08)' }}
     >
       <div className="flex items-center justify-between">
@@ -198,7 +214,7 @@ function RecommendationCard({ rec }: { rec: Recommendation }) {
   const status = STATUS_CONFIG[rec.status];
   return (
     <div
-      className="p-4 rounded-xl flex flex-col gap-3 transition-all"
+      className="p-4 rounded-xl flex flex-col gap-3 card-interactive"
       style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)' }}
     >
       <div className="flex items-start justify-between gap-3">
@@ -258,7 +274,7 @@ function PolicyPanel({ items }: { items: PolicyItem[] }) {
   };
   return (
     <div
-      className="p-5 rounded-2xl"
+      className="p-5 rounded-2xl card-interactive"
       style={{ background: '#141A27', border: '1px solid rgba(255,255,255,0.08)' }}
     >
       <div className="flex items-center gap-2 mb-4">

@@ -300,7 +300,7 @@ export default function ApprovalsPage() {
 
     // Direct routing for live USDC test transactions
     if (targetItem.actionType === 'LIVE_TEST_SETTLEMENT' && decision === 'APPROVED') {
-      await handleExecuteLiveTransfer(targetItem.payeeAddress, targetItem.amountUsdc, 'direct_payee', id);
+      await handleExecuteLiveTransfer(targetItem.payeeAddress, targetItem.amountUsdc, id);
       return;
     }
 
@@ -610,7 +610,7 @@ export default function ApprovalsPage() {
           return (
             <div
               key={item.id}
-              className="p-6 rounded-2xl space-y-4 transition-all"
+              className="p-6 rounded-2xl space-y-4 card-interactive"
               style={{ background: '#141A27', border: '1px solid rgba(255,255,255,0.08)' }}
             >
               {/* Card Header with Status & Direct Receipt Link */}
@@ -744,7 +744,7 @@ export default function ApprovalsPage() {
                     </button>
                     {item.actionType === 'LIVE_TEST_SETTLEMENT' ? (
                       <button
-                        onClick={() => handleExecuteLiveTransfer(item.payeeAddress, item.amountUsdc, 'direct_payee', item.id)}
+                        onClick={() => handleExecuteLiveTransfer(item.payeeAddress, item.amountUsdc, item.id)}
                         disabled={isExecutingLiveTx}
                         className="px-4 py-1.5 rounded-xl text-white text-xs font-bold transition-all flex items-center gap-1.5 active:scale-95 disabled:opacity-40"
                         style={{

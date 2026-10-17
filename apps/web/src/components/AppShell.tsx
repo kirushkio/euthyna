@@ -73,7 +73,7 @@ export const AppShell: React.FC<AppShellProps> = ({ children }) => {
   const formatAddr = (addr: string) => `${addr.slice(0, 6)}…${addr.slice(-4)}`;
 
   return (
-    <div className="min-h-screen flex flex-col md:flex-row" style={{ background: '#080B12', color: '#F0F4FF' }}>
+    <div className="min-h-screen flex flex-col md:flex-row bg-ambient-mesh" style={{ color: '#F0F4FF' }}>
 
       {/* ── Mobile Top Bar ── */}
       <div
