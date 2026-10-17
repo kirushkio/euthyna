@@ -3,6 +3,8 @@
   "version": "1.0.0",
   "description": "EuthynaVault and yield adapters for Arc Testnet",
   "scripts": {
+    "compile": "node test/compile.js",
+    "pretest": "node test/compile.js",
     "test": "vitest run"
   },
   "devDependencies": {
