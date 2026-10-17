@@ -36,6 +36,7 @@ interface WalletContextType {
   isConnected: boolean;
   isConnecting: boolean;
   isArcTestnet: boolean;
+  isInitialized: boolean;
   activeRole: TreasuryRole;
   usdcBalance: string;
   connectError: string | null;
@@ -73,6 +74,7 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   const [address, setAddress] = useState<string | null>(null);
   const [chainId, setChainId] = useState<number | null>(null);
   const [isConnecting, setIsConnecting] = useState<boolean>(false);
+  const [isInitialized, setIsInitialized] = useState<boolean>(false);
   const [connectError, setConnectError] = useState<string | null>(null);
   const [activeRole, setActiveRole] = useState<TreasuryRole>('OWNER');
   const [usdcBalance, setUsdcBalance] = useState<string>('24,500.00');
@@ -149,6 +151,7 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
           if (savedRole) setActiveRole(savedRole);
         }
       }
+      setIsInitialized(true);
       return;
     }
 
@@ -185,7 +188,12 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
             handleAccountsChanged(accs);
           }
         })
-        .catch(() => {});
+        .catch(() => {})
+        .finally(() => {
+          setIsInitialized(true);
+        });
+    } else {
+      setIsInitialized(true);
     }
 
     ethereum
@@ -346,6 +354,7 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         isConnected,
         isConnecting,
         isArcTestnet,
+        isInitialized,
         activeRole,
         usdcBalance,
         connectError,

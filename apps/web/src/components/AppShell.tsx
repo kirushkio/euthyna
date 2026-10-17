@@ -32,7 +32,7 @@ interface AppShellProps {
 export const AppShell: React.FC<AppShellProps> = ({ children }) => {
   const pathname = usePathname();
   const router = useRouter();
-  const { isConnected, isConnecting, isArcTestnet, address, disconnect, switchToArc } = useWallet();
+  const { isConnected, isConnecting, isArcTestnet, isInitialized, address, disconnect, switchToArc } = useWallet();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [showHowItWorksModal, setShowHowItWorksModal] = useState(false);
 
@@ -40,10 +40,42 @@ export const AppShell: React.FC<AppShellProps> = ({ children }) => {
 
   const handleDisconnect = async () => {
     await disconnect();
+    router.replace('/');
   };
+
+  // Redirect to home if disconnected and attempting to access inner workspace
+  useEffect(() => {
+    if (isInitialized && !isConnected && pathname !== '/' && !isLoginPage) {
+      router.replace('/');
+    }
+  }, [isInitialized, isConnected, pathname, isLoginPage, router]);
 
   if (isLoginPage) {
     return <>{children}</>;
+  }
+
+  // Loading state while checking wallet session on mount
+  if (!isInitialized) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-ambient-mesh" style={{ color: '#F0F4FF' }}>
+        <Loader2 className="w-8 h-8 text-violet-500 animate-spin" />
+      </div>
+    );
+  }
+
+  // When wallet is disconnected: ONLY wallet connect should be there on the home page!
+  // No sidebar, no header, no inner workspace tabs.
+  if (!isConnected) {
+    return (
+      <div className="min-h-screen flex flex-col justify-center items-center bg-ambient-mesh p-4" style={{ color: '#F0F4FF' }}>
+        {pathname === '/' ? children : (
+          <div className="flex items-center gap-2 text-sm text-slate-400">
+            <Loader2 className="w-4 h-4 animate-spin text-violet-400" />
+            <span>Redirecting to wallet connection…</span>
+          </div>
+        )}
+      </div>
+    );
   }
 
   const navItems = [
