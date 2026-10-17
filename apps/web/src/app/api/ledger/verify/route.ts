@@ -1,11 +1,25 @@
 import { NextResponse } from 'next/server';
 import { existsSync, readFileSync } from 'fs';
+import path from 'path';
+
+function findFile(relPath: string): string | null {
+  const p1 = path.resolve(process.cwd(), relPath);
+  if (existsSync(p1)) return p1;
+  const p2 = path.resolve(process.cwd(), '../..', relPath);
+  if (existsSync(p2)) return p2;
+  return null;
+}
 
 export async function GET() {
   let records: any[] = [];
-  if (existsSync('data/seed_state.json')) {
-    const data = JSON.parse(readFileSync('data/seed_state.json', 'utf8'));
-    records = data.allDecisionRecords || [];
+  const filePath = findFile('data/seed_state.json');
+  if (filePath) {
+    try {
+      const data = JSON.parse(readFileSync(filePath, 'utf8'));
+      records = data.allDecisionRecords || [];
+    } catch {
+      // safe fallback
+    }
   }
 
   return NextResponse.json({

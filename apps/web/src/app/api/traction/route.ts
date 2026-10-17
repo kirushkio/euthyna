@@ -1,15 +1,34 @@
 import { NextResponse } from 'next/server';
 import { existsSync, readFileSync } from 'fs';
+import path from 'path';
+
+function findFile(relPath: string): string | null {
+  const p1 = path.resolve(process.cwd(), relPath);
+  if (existsSync(p1)) return p1;
+  const p2 = path.resolve(process.cwd(), '../..', relPath);
+  if (existsSync(p2)) return p2;
+  return null;
+}
 
 export async function GET() {
   let volumeLog: any[] = [];
-  if (existsSync('data/volume_log.json')) {
-    volumeLog = JSON.parse(readFileSync('data/volume_log.json', 'utf8'));
+  const volPath = findFile('data/volume_log.json');
+  if (volPath) {
+    try {
+      volumeLog = JSON.parse(readFileSync(volPath, 'utf8'));
+    } catch {
+      // safe fallback
+    }
   }
 
   let deployments: any = null;
-  if (existsSync('deployments.json')) {
-    deployments = JSON.parse(readFileSync('deployments.json', 'utf8'));
+  const depPath = findFile('deployments.json');
+  if (depPath) {
+    try {
+      deployments = JSON.parse(readFileSync(depPath, 'utf8'));
+    } catch {
+      // safe fallback
+    }
   }
 
   const paymentTxs = volumeLog.filter((t: any) => t.kind === 'PAY_OBLIGATION');
