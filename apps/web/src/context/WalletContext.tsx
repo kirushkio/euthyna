@@ -118,8 +118,8 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
           params: [addr, 'latest'],
         });
         if (balHex) {
-          const bal = parseInt(balHex, 16);
-          const usdc = (bal / 1e6).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+          const balBig = BigInt(balHex);
+          const usdc = (Number(balBig) / 1e18).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 4 });
           setUsdcBalance(usdc);
         }
       }

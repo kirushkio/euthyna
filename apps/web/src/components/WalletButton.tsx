@@ -300,21 +300,31 @@ export const WalletButton: React.FC = () => {
               {(['OWNER', 'REGISTRAR', 'AGENT', 'GUARDIAN'] as TreasuryRole[]).map(r => {
                 const meta = getRoleBadge(r);
                 const isActive = activeRole === r;
+                const roleDesc = {
+                  OWNER: 'Governance & Limits',
+                  REGISTRAR: 'Invoice Intake',
+                  AGENT: 'AI Execution',
+                  GUARDIAN: 'Emergency Freeze',
+                }[r];
                 return (
                   <button
                     key={r}
                     onClick={() => { setDemoRole(r); setIsOpen(false); }}
-                    className="px-2 py-1.5 rounded-lg text-[11px] font-semibold text-left transition-all"
+                    className="px-2.5 py-1.5 rounded-lg text-left transition-all"
                     style={
                       isActive
                         ? { background: meta.bg, color: meta.color, border: `1px solid ${meta.border}` }
                         : { background: 'rgba(255,255,255,0.04)', color: '#8B95B0', border: '1px solid rgba(255,255,255,0.08)' }
                     }
+                    title={roleDesc}
                   >
-                    <span className="flex items-center gap-1">
+                    <div className="flex items-center gap-1 font-bold text-[11px]">
                       {meta.icon}
-                      {r}
-                    </span>
+                      <span>{r}</span>
+                    </div>
+                    <div className="text-[9px] opacity-75 mt-0.5 truncate">
+                      {roleDesc}
+                    </div>
                   </button>
                 );
               })}
