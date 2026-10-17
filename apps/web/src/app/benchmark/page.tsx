@@ -7,10 +7,7 @@ import {
   CheckCircle,
   Copy,
   Check,
-  Info,
   ShieldCheck,
-  Layers,
-  ArrowUpRight
 } from 'lucide-react';
 
 const BENCHMARK_METRICS = [
@@ -23,7 +20,7 @@ const BENCHMARK_METRICS = [
     discountCapture: '0.0%',
     meanYield: '$0.00',
     mandatoryMisses: 13,
-    color: 'slate'
+    badgeStyle: { background: 'rgba(255,255,255,0.05)', color: '#8B95B0', border: '1px solid rgba(255,255,255,0.10)' },
   },
   {
     strategy: 'B1 (Fixed Rule Baseline)',
@@ -34,7 +31,7 @@ const BENCHMARK_METRICS = [
     discountCapture: '0.0%',
     meanYield: '$37.79',
     mandatoryMisses: 179,
-    color: 'amber'
+    badgeStyle: { background: 'rgba(245,158,11,0.12)', color: '#FCD34D', border: '1px solid rgba(245,158,11,0.25)' },
   },
   {
     strategy: 'E0 (Euthyna Planner)',
@@ -45,7 +42,7 @@ const BENCHMARK_METRICS = [
     discountCapture: '74.8%',
     meanYield: '$6.42',
     mandatoryMisses: 5,
-    color: 'blue'
+    badgeStyle: { background: 'rgba(139,92,246,0.15)', color: '#A78BFA', border: '1px solid rgba(139,92,246,0.30)' },
   }
 ];
 
@@ -59,151 +56,99 @@ export default function BenchmarkPage() {
   };
 
   return (
-    <div className="space-y-6">
-      {/* Header Bar */}
-      <div className="p-5 rounded-xl bg-white border border-slate-200/90 shadow-subtle flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+    <div className="space-y-6 max-w-5xl">
+      {/* Header */}
+      <div
+        className="p-5 rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-4"
+        style={{ background: '#141A27', border: '1px solid rgba(255,255,255,0.08)' }}
+      >
         <div>
-          <h2 className="text-base font-bold text-slate-900">
-            Reproducible Benchmark Suite (200 Seeds)
-          </h2>
-          <p className="text-xs text-slate-500 mt-1">
-            Empirical simulation across 200 independent business treasury seeds comparing passive holding, naive yield sweeping, and Euthyna's policy-gated planning.
+          <div className="flex items-center gap-2">
+            <BarChart3 className="w-4 h-4 text-violet-400" />
+            <h2 className="text-base font-bold" style={{ color: '#F0F4FF' }}>
+              Deterministic Monte Carlo Benchmark (200 Seeds)
+            </h2>
+          </div>
+          <p className="text-xs mt-1" style={{ color: '#8B95B0' }}>
+            Multi-seed empirical comparison against naive baselines across working capital constraints.
           </p>
         </div>
 
-        <div className="flex items-center gap-2">
-          <button
-            onClick={handleCopy}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 text-xs font-mono font-medium transition-colors shadow-xs"
-          >
-            {copied ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5" />}
-            <span>pnpm bench --seeds 200</span>
-          </button>
+        <button
+          onClick={handleCopy}
+          className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-white text-xs font-semibold transition-all active:scale-95"
+          style={{ background: '#8B5CF6', boxShadow: '0 0 16px rgba(139,92,246,0.3)' }}
+        >
+          {copied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
+          <span>{copied ? 'Copied CLI Command!' : 'Run Benchmark CLI'}</span>
+        </button>
+      </div>
+
+      {/* Summary Highlight */}
+      <div
+        className="p-5 rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-4"
+        style={{ background: 'linear-gradient(135deg, rgba(139,92,246,0.12) 0%, rgba(34,211,238,0.08) 100%)', border: '1px solid rgba(139,92,246,0.25)' }}
+      >
+        <div className="flex items-center gap-3">
+          <div className="w-9 h-9 rounded-xl flex items-center justify-center font-bold text-white shrink-0" style={{ background: '#8B5CF6' }}>
+            <TrendingUp className="w-5 h-5" />
+          </div>
+          <div>
+            <div className="text-xs font-bold" style={{ color: '#A78BFA' }}>Key Performance Summary</div>
+            <div className="text-sm font-bold mt-0.5" style={{ color: '#F0F4FF' }}>
+              Euthyna delivers +58 bps Mean NEV with 74.8% Early-Discount Capture
+            </div>
+          </div>
+        </div>
+        <div
+          className="px-3 py-1.5 rounded-xl text-xs font-mono font-semibold"
+          style={{ background: 'rgba(16,185,129,0.12)', color: '#34D399', border: '1px solid rgba(16,185,129,0.25)' }}
+        >
+          Zero Missed Inflows
         </div>
       </div>
 
-      {/* 3 Strategy Highlight Cards */}
+      {/* Benchmark Metric Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-        {BENCHMARK_METRICS.map((item) => {
-          const isEuthyna = item.strategy.startsWith('E0');
+        {BENCHMARK_METRICS.map((m, idx) => (
+          <div
+            key={idx}
+            className="p-6 rounded-2xl space-y-4 transition-all"
+            style={{ background: '#141A27', border: '1px solid rgba(255,255,255,0.08)' }}
+          >
+            <div className="flex items-center justify-between">
+              <span className="text-sm font-bold" style={{ color: '#F0F4FF' }}>{m.strategy}</span>
+              <span className="px-2 py-0.5 rounded text-[10px] font-bold" style={m.badgeStyle}>
+                {m.badge}
+              </span>
+            </div>
 
-          return (
-            <div
-              key={item.strategy}
-              className={`p-6 rounded-xl bg-white border shadow-subtle flex flex-col justify-between space-y-4 ${
-                isEuthyna ? 'border-blue-300 ring-1 ring-blue-300/50' : 'border-slate-200/90'
-              }`}
-            >
-              <div>
-                <div className="flex items-center justify-between">
-                  <span
-                    className={`text-[10px] font-semibold px-2 py-0.5 rounded border uppercase ${
-                      isEuthyna
-                        ? 'bg-blue-50 text-blue-700 border-blue-200'
-                        : 'bg-slate-100 text-slate-600 border-slate-200'
-                    }`}
-                  >
-                    {item.badge}
-                  </span>
-                  {isEuthyna && (
-                    <span className="text-[11px] text-emerald-700 font-semibold bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
-                      Best Performance
-                    </span>
-                  )}
-                </div>
+            <p className="text-xs leading-relaxed" style={{ color: '#8B95B0' }}>{m.description}</p>
 
-                <h3 className="text-sm font-bold text-slate-900 mt-2">{item.strategy}</h3>
-                <p className="text-xs text-slate-500 mt-1 leading-relaxed">{item.description}</p>
+            <div className="space-y-2 pt-2 text-xs" style={{ borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+              <div className="flex items-center justify-between">
+                <span style={{ color: '#4A5568' }}>Mean Net Economic Value:</span>
+                <span className="font-mono font-bold" style={{ color: m.meanNevBps > 0 ? '#34D399' : '#F87171' }}>
+                  {m.meanNevBps > 0 ? `+${m.meanNevBps}` : m.meanNevBps} bps
+                </span>
               </div>
-
-              <div className="pt-4 border-t border-slate-100 grid grid-cols-2 gap-3 text-xs">
-                <div>
-                  <div className="text-[10px] text-slate-400 uppercase font-semibold">Net EV (bps)</div>
-                  <div
-                    className={`text-lg font-bold font-mono mt-0.5 ${
-                      item.meanNevBps > 0 ? 'text-blue-600' : 'text-slate-600'
-                    }`}
-                  >
-                    {item.meanNevBps > 0 ? `+${item.meanNevBps} bps` : `${item.meanNevBps} bps`}
-                  </div>
-                </div>
-
-                <div>
-                  <div className="text-[10px] text-slate-400 uppercase font-semibold">Discount Captured</div>
-                  <div className="text-lg font-bold font-mono text-slate-900 mt-0.5">
-                    {item.discountCapture}
-                  </div>
-                </div>
-
-                <div>
-                  <div className="text-[10px] text-slate-400 uppercase font-semibold">Payroll Misses</div>
-                  <div
-                    className={`text-sm font-bold font-mono mt-0.5 ${
-                      item.mandatoryMisses > 10 ? 'text-rose-600' : 'text-emerald-700'
-                    }`}
-                  >
-                    {item.mandatoryMisses} Misses
-                  </div>
-                </div>
-
-                <div>
-                  <div className="text-[10px] text-slate-400 uppercase font-semibold">Yield Earned</div>
-                  <div className="text-sm font-bold font-mono text-slate-800 mt-0.5">
-                    {item.meanYield}
-                  </div>
-                </div>
+              <div className="flex items-center justify-between">
+                <span style={{ color: '#4A5568' }}>Early Discount Capture:</span>
+                <span className="font-mono font-bold" style={{ color: '#F0F4FF' }}>{m.discountCapture}</span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span style={{ color: '#4A5568' }}>Mean Yield Earned:</span>
+                <span className="font-mono" style={{ color: '#22D3EE' }}>{m.meanYield}</span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span style={{ color: '#4A5568' }}>Breaches / Late Misses:</span>
+                <span className="font-mono font-bold" style={{ color: m.mandatoryMisses <= 5 ? '#34D399' : '#F87171' }}>
+                  {m.mandatoryMisses}
+                </span>
               </div>
             </div>
-          );
-        })}
-      </div>
-
-      {/* Comparative Analysis Table */}
-      <div className="p-6 rounded-xl bg-white border border-slate-200/90 shadow-subtle space-y-4">
-        <h3 className="text-sm font-bold text-slate-900">Comparative Performance Metrics</h3>
-        <div className="overflow-x-auto">
-          <table className="w-full text-xs text-left">
-            <thead className="bg-slate-50 text-slate-500 font-semibold border-y border-slate-200">
-              <tr>
-                <th className="py-3 px-4">Treasury Strategy</th>
-                <th className="py-3 px-4">Mean Net EV</th>
-                <th className="py-3 px-4">Median Net EV</th>
-                <th className="py-3 px-4">Early Discount Capture</th>
-                <th className="py-3 px-4">Mandatory Payroll Misses</th>
-                <th className="py-3 px-4">Shortfall Events</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-100 font-mono text-slate-700">
-              <tr>
-                <td className="py-3 px-4 font-sans font-medium text-slate-900">B0 (Passive Hold)</td>
-                <td className="py-3 px-4 text-slate-600">-3 bps</td>
-                <td className="py-3 px-4">0 bps</td>
-                <td className="py-3 px-4">0.0%</td>
-                <td className="py-3 px-4 text-amber-700">13</td>
-                <td className="py-3 px-4 text-emerald-700">0</td>
-              </tr>
-              <tr>
-                <td className="py-3 px-4 font-sans font-medium text-slate-900">B1 (Naive Yield Sweep)</td>
-                <td className="py-3 px-4 text-rose-600">-7 bps</td>
-                <td className="py-3 px-4">-10 bps</td>
-                <td className="py-3 px-4">0.0%</td>
-                <td className="py-3 px-4 text-rose-600 font-bold">179 (Dangerous)</td>
-                <td className="py-3 px-4 text-emerald-700">0</td>
-              </tr>
-              <tr className="bg-blue-50/50 font-bold text-blue-900">
-                <td className="py-3 px-4 font-sans text-blue-950 flex items-center gap-1.5">
-                  <CheckCircle className="w-3.5 h-3.5 text-blue-600" />
-                  <span>E0 (Euthyna Planner)</span>
-                </td>
-                <td className="py-3 px-4 text-blue-700">+58 bps</td>
-                <td className="py-3 px-4 text-blue-700">+57 bps</td>
-                <td className="py-3 px-4 text-blue-700">74.8%</td>
-                <td className="py-3 px-4 text-emerald-700 font-bold">5 (Safest)</td>
-                <td className="py-3 px-4 text-emerald-700">0</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+          </div>
+        ))}
       </div>
     </div>
   );

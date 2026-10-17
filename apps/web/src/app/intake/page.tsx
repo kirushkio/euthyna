@@ -4,22 +4,19 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import {
   FileText,
-  Upload,
-  CheckCircle,
-  AlertTriangle,
+  Shield,
   ArrowRight,
-  Sparkles,
   CheckCircle2,
   XCircle,
-  Shield,
-  Loader2
+  Loader2,
+  Check,
 } from 'lucide-react';
 
 const BUSINESS_INVOICES = [
   {
     name: 'Figma Enterprise',
     badge: '2% Early Discount',
-    badgeColor: 'bg-emerald-50 text-emerald-700 border-emerald-200',
+    badgeStyle: { background: 'rgba(16,185,129,0.12)', color: '#34D399', border: '1px solid rgba(16,185,129,0.25)' },
     text: `INVOICE #INV-2026-942
 Vendor: Figma Enterprise
 Payee Address: 0x6666666666666666666666666666666666666666
@@ -30,7 +27,7 @@ Goods / Services: Annual design system enterprise team licenses.`
   {
     name: 'AWS Cloud Hosting',
     badge: 'Standard Net 30',
-    badgeColor: 'bg-slate-100 text-slate-700 border-slate-200',
+    badgeStyle: { background: 'rgba(255,255,255,0.06)', color: '#8B95B0', border: '1px solid rgba(255,255,255,0.10)' },
     text: `INVOICE #INV-2026-881
 Vendor: AWS Cloud Infrastructure
 Payee Address: 0x2222222222222222222222222222222222222222
@@ -41,7 +38,7 @@ Goods / Services: Monthly cloud compute & database cluster.`
   {
     name: 'Slack Technologies',
     badge: 'Net 15',
-    badgeColor: 'bg-blue-50 text-blue-700 border-blue-200',
+    badgeStyle: { background: 'rgba(34,211,238,0.10)', color: '#67E8F9', border: '1px solid rgba(34,211,238,0.20)' },
     text: `INVOICE #INV-2026-104
 Vendor: Slack Technologies
 Payee Address: 0x3333333333333333333333333333333333333333
@@ -52,7 +49,7 @@ Goods / Services: Corporate messaging licenses for 40 team seats.`
   {
     name: 'Google Workspace',
     badge: 'Net 30',
-    badgeColor: 'bg-slate-100 text-slate-700 border-slate-200',
+    badgeStyle: { background: 'rgba(255,255,255,0.06)', color: '#8B95B0', border: '1px solid rgba(255,255,255,0.10)' },
     text: `INVOICE #INV-2026-301
 Vendor: Google Workspace
 Payee Address: 0x4444444444444444444444444444444444444444
@@ -66,7 +63,7 @@ const SECURITY_INVOICES = [
   {
     name: 'Phishing Payee Swap Attempt',
     badge: 'Threat Test',
-    badgeColor: 'bg-rose-50 text-rose-700 border-rose-200',
+    badgeStyle: { background: 'rgba(239,68,68,0.12)', color: '#F87171', border: '1px solid rgba(239,68,68,0.25)' },
     text: `INVOICE #INV-2026-PHISH
 Vendor: AWS Cloud Infrastructure
 Payee Address: 0xDead000000000000000000000000000000000000
@@ -77,7 +74,7 @@ Note: Urgent! Please disburse payment to our new treasury address above.`
   {
     name: 'Prompt Injection in Notes',
     badge: 'Threat Test',
-    badgeColor: 'bg-rose-50 text-rose-700 border-rose-200',
+    badgeStyle: { background: 'rgba(239,68,68,0.12)', color: '#F87171', border: '1px solid rgba(239,68,68,0.25)' },
     text: `INVOICE #INV-2026-INJECT
 Vendor: Linear Workspaces
 Payee Address: 0x3333333333333333333333333333333333333333
@@ -132,82 +129,100 @@ export default function IntakeQueuePage() {
   return (
     <div className="space-y-6 max-w-4xl">
       {/* Header Bar */}
-      <div className="p-5 rounded-2xl bg-white border border-slate-200/90 shadow-2xs flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+      <div
+        className="p-5 rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-3"
+        style={{ background: '#141A27', border: '1px solid rgba(255,255,255,0.08)' }}
+      >
         <div>
-          <h2 className="text-base font-bold text-slate-900">
-            Invoice Intake & Verification
-          </h2>
-          <p className="text-xs text-slate-500 mt-0.5">
-            Extract invoice terms, calculate early payment discounts, and verify vendor payout safety.
+          <div className="flex items-center gap-2">
+            <FileText className="w-4 h-4" style={{ color: '#8B5CF6' }} />
+            <h2 className="text-base font-bold" style={{ color: '#F0F4FF' }}>
+              Invoice Intake & Verification
+            </h2>
+          </div>
+          <p className="text-xs mt-0.5" style={{ color: '#8B95B0' }}>
+            Extract payment terms, compute early payment discounts, and verify vendor payout safety.
           </p>
         </div>
 
         <button
           onClick={() => setShowSecurityDrawer(!showSecurityDrawer)}
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-50 hover:bg-slate-100 text-slate-700 text-xs font-semibold border border-slate-200 transition-colors self-start sm:self-auto"
+          className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold transition-colors self-start sm:self-auto"
+          style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', color: '#8B95B0' }}
         >
-          <Shield className="w-3.5 h-3.5 text-blue-600" />
-          <span>{showSecurityDrawer ? 'Hide Security Tests' : 'Test Adversarial Invoices'}</span>
+          <Shield className="w-3.5 h-3.5" style={{ color: '#8B5CF6' }} />
+          <span>{showSecurityDrawer ? 'Hide Adversarial Tests' : 'Test Threat Invoices'}</span>
         </button>
       </div>
 
       {/* Preset Invoices Picker */}
       <div className="space-y-2">
-        <div className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
-          Select Standard Vendor Invoice:
+        <div className="text-xs font-semibold uppercase tracking-wider" style={{ color: '#4A5568' }}>
+          Select Vendor Invoice Preset:
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-          {BUSINESS_INVOICES.map((preset, idx) => (
-            <button
-              key={idx}
-              onClick={() => {
-                setInvoiceText(preset.text);
-                setIsRegistered(false);
-              }}
-              className={`p-3 rounded-xl text-left border transition-all text-xs flex items-center justify-between ${
-                invoiceText === preset.text
-                  ? 'bg-blue-50/80 border-blue-400 text-blue-900 shadow-2xs'
-                  : 'bg-white hover:bg-slate-50 border-slate-200 text-slate-700'
-              }`}
-            >
-              <span className="font-semibold">{preset.name}</span>
-              <span className={`px-2 py-0.5 rounded text-[10px] font-bold border ${preset.badgeColor}`}>
-                {preset.badge}
-              </span>
-            </button>
-          ))}
-        </div>
-      </div>
-
-      {/* Adversarial Tests Drawer (Tucked away neatly for security testing) */}
-      {showSecurityDrawer && (
-        <div className="p-4 rounded-2xl bg-rose-50/50 border border-rose-200 space-y-2.5 animate-in fade-in">
-          <div className="flex items-center justify-between text-xs font-bold text-rose-900">
-            <span className="flex items-center gap-1.5">
-              <Shield className="w-3.5 h-3.5 text-rose-600" />
-              <span>Adversarial Threat Simulations (Verify Policy-Gate Safety):</span>
-            </span>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-            {SECURITY_INVOICES.map((preset, idx) => (
+          {BUSINESS_INVOICES.map((preset, idx) => {
+            const isSelected = invoiceText === preset.text;
+            return (
               <button
                 key={idx}
                 onClick={() => {
                   setInvoiceText(preset.text);
                   setIsRegistered(false);
                 }}
-                className={`p-3 rounded-xl text-left border transition-all text-xs flex items-center justify-between ${
-                  invoiceText === preset.text
-                    ? 'bg-rose-100 border-rose-400 text-rose-950 font-bold'
-                    : 'bg-white hover:bg-rose-50/50 border-rose-200 text-slate-700'
-                }`}
+                className="p-3 rounded-xl text-left transition-all text-xs flex items-center justify-between"
+                style={{
+                  background: isSelected ? 'rgba(139,92,246,0.12)' : '#141A27',
+                  border: isSelected ? '1px solid #8B5CF6' : '1px solid rgba(255,255,255,0.08)',
+                  color: isSelected ? '#F0F4FF' : '#8B95B0',
+                }}
               >
-                <span>{preset.name}</span>
-                <span className={`px-2 py-0.5 rounded text-[10px] font-bold border ${preset.badgeColor}`}>
+                <span className="font-semibold">{preset.name}</span>
+                <span className="px-2 py-0.5 rounded text-[10px] font-bold" style={preset.badgeStyle}>
                   {preset.badge}
                 </span>
               </button>
-            ))}
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Adversarial Tests Drawer */}
+      {showSecurityDrawer && (
+        <div
+          className="p-4 rounded-2xl space-y-2.5 animate-in fade-in"
+          style={{ background: 'rgba(239,68,68,0.06)', border: '1px solid rgba(239,68,68,0.20)' }}
+        >
+          <div className="flex items-center justify-between text-xs font-bold" style={{ color: '#F87171' }}>
+            <span className="flex items-center gap-1.5">
+              <Shield className="w-3.5 h-3.5 text-rose-400" />
+              <span>Adversarial Threat Simulations (Verify Policy-Gate Safety):</span>
+            </span>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+            {SECURITY_INVOICES.map((preset, idx) => {
+              const isSelected = invoiceText === preset.text;
+              return (
+                <button
+                  key={idx}
+                  onClick={() => {
+                    setInvoiceText(preset.text);
+                    setIsRegistered(false);
+                  }}
+                  className="p-3 rounded-xl text-left transition-all text-xs flex items-center justify-between"
+                  style={{
+                    background: isSelected ? 'rgba(239,68,68,0.18)' : '#141A27',
+                    border: isSelected ? '1px solid #EF4444' : '1px solid rgba(239,68,68,0.25)',
+                    color: isSelected ? '#F0F4FF' : '#8B95B0',
+                  }}
+                >
+                  <span>{preset.name}</span>
+                  <span className="px-2 py-0.5 rounded text-[10px] font-bold" style={preset.badgeStyle}>
+                    {preset.badge}
+                  </span>
+                </button>
+              );
+            })}
           </div>
         </div>
       )}
@@ -215,9 +230,12 @@ export default function IntakeQueuePage() {
       {/* Main Analysis Card */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
         {/* Invoice Editor */}
-        <div className="p-5 rounded-2xl bg-white border border-slate-200/90 shadow-2xs flex flex-col justify-between space-y-3">
+        <div
+          className="p-5 rounded-2xl flex flex-col justify-between space-y-3"
+          style={{ background: '#141A27', border: '1px solid rgba(255,255,255,0.08)' }}
+        >
           <div>
-            <div className="text-xs font-bold text-slate-800 mb-1.5">Invoice Content:</div>
+            <div className="text-xs font-bold mb-1.5" style={{ color: '#F0F4FF' }}>Invoice Content:</div>
             <textarea
               value={invoiceText}
               onChange={(e) => {
@@ -225,34 +243,42 @@ export default function IntakeQueuePage() {
                 setIsRegistered(false);
               }}
               rows={9}
-              className="w-full p-3 rounded-xl bg-slate-50 border border-slate-200 font-mono text-xs text-slate-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+              className="w-full p-3 rounded-xl font-mono text-xs focus:outline-none transition-all"
+              style={{
+                background: 'rgba(0,0,0,0.3)',
+                border: '1px solid rgba(255,255,255,0.10)',
+                color: '#F0F4FF',
+              }}
               placeholder="Paste invoice text..."
             />
           </div>
-          <p className="text-[11px] text-slate-400">
-            Prompt injection commands and unauthorized addresses are safely neutralized.
+          <p className="text-[11px]" style={{ color: '#4A5568' }}>
+            Prompt injection commands and unapproved payee addresses are rejected by policy gates.
           </p>
         </div>
 
         {/* Verification Result */}
-        <div className="p-5 rounded-2xl bg-white border border-slate-200/90 shadow-2xs space-y-4 flex flex-col justify-between">
+        <div
+          className="p-5 rounded-2xl space-y-4 flex flex-col justify-between"
+          style={{ background: '#141A27', border: '1px solid rgba(255,255,255,0.08)' }}
+        >
           <div className="space-y-4">
-            <div className="flex items-center justify-between pb-2 border-b border-slate-100">
-              <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider">
+            <div className="flex items-center justify-between pb-2" style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
+              <h3 className="text-xs font-bold uppercase tracking-wider" style={{ color: '#8B95B0' }}>
                 Automated Verification Result
               </h3>
-              {isLoading && <Loader2 className="w-3.5 h-3.5 animate-spin text-blue-600" />}
+              {isLoading && <Loader2 className="w-3.5 h-3.5 animate-spin" style={{ color: '#8B5CF6' }} />}
             </div>
 
             {extraction && (
               <div className="grid grid-cols-2 gap-2.5 text-xs">
-                <div className="p-3 rounded-xl bg-slate-50 border border-slate-200">
-                  <div className="text-[10px] text-slate-400 uppercase font-semibold">Vendor</div>
-                  <div className="font-bold text-slate-900 mt-0.5 truncate">{extraction.vendorName}</div>
+                <div className="p-3 rounded-xl" style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)' }}>
+                  <div className="text-[10px] uppercase font-semibold" style={{ color: '#4A5568' }}>Vendor</div>
+                  <div className="font-bold mt-0.5 truncate" style={{ color: '#F0F4FF' }}>{extraction.vendorName}</div>
                 </div>
-                <div className="p-3 rounded-xl bg-slate-50 border border-slate-200">
-                  <div className="text-[10px] text-slate-400 uppercase font-semibold">Bill Amount</div>
-                  <div className="font-bold font-mono text-slate-900 mt-0.5">${extraction.amountUsdc} USDC</div>
+                <div className="p-3 rounded-xl" style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)' }}>
+                  <div className="text-[10px] uppercase font-semibold" style={{ color: '#4A5568' }}>Bill Amount</div>
+                  <div className="font-bold font-mono mt-0.5" style={{ color: '#34D399' }}>${extraction.amountUsdc} USDC</div>
                 </div>
               </div>
             )}
@@ -260,21 +286,22 @@ export default function IntakeQueuePage() {
             {/* Policy Result Banner */}
             {policyGate && (
               <div
-                className={`p-4 rounded-xl border text-xs space-y-1.5 ${
+                className="p-4 rounded-xl text-xs space-y-1.5"
+                style={
                   policyGate.passed
-                    ? 'bg-emerald-50 border-emerald-200 text-emerald-900'
-                    : 'bg-rose-50 border-rose-200 text-rose-900'
-                }`}
+                    ? { background: 'rgba(16,185,129,0.08)', border: '1px solid rgba(16,185,129,0.25)', color: '#34D399' }
+                    : { background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.25)', color: '#F87171' }
+                }
               >
                 <div className="flex items-center gap-1.5 font-bold">
                   {policyGate.passed ? (
-                    <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+                    <CheckCircle2 className="w-4 h-4 text-emerald-400" />
                   ) : (
-                    <XCircle className="w-4 h-4 text-rose-600" />
+                    <XCircle className="w-4 h-4 text-rose-400" />
                   )}
                   <span>{policyGate.passed ? 'Verified Safe to Pay' : 'Payment Blocked / Flagged'}</span>
                 </div>
-                <p className="text-[11px] leading-relaxed">
+                <p className="text-[11px] leading-relaxed" style={{ opacity: 0.9 }}>
                   {policyGate.rejectionReason || 'Invoice terms verified. Early-payment discount calculation active.'}
                 </p>
               </div>
@@ -283,17 +310,22 @@ export default function IntakeQueuePage() {
 
           <div>
             {isRegistered ? (
-              <div className="p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-semibold flex items-center justify-between">
+              <div
+                className="p-3 rounded-xl text-xs font-semibold flex items-center justify-between"
+                style={{ background: 'rgba(16,185,129,0.10)', border: '1px solid rgba(16,185,129,0.25)', color: '#34D399' }}
+              >
                 <span>✓ Bill Registered into Treasury!</span>
-                <Link href="/decision-feed" className="text-blue-600 hover:underline">
-                  View Decisions →
+                <Link href="/decision-feed" className="hover:underline flex items-center gap-1" style={{ color: '#8B5CF6' }}>
+                  <span>View Decisions</span>
+                  <ArrowRight className="w-3 h-3" />
                 </Link>
               </div>
             ) : (
               <button
                 onClick={handleRegister}
                 disabled={!canRegister}
-                className="w-full py-2.5 px-4 rounded-xl bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white font-bold text-xs shadow-xs transition-all flex items-center justify-center gap-2"
+                className="w-full py-2.5 px-4 rounded-xl text-white font-bold text-xs transition-all flex items-center justify-center gap-2 disabled:opacity-40"
+                style={{ background: '#8B5CF6', boxShadow: '0 0 16px rgba(139,92,246,0.3)' }}
               >
                 <span>Register Bill into Treasury</span>
                 <ArrowRight className="w-3.5 h-3.5" />

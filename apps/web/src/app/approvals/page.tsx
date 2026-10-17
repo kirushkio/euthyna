@@ -14,7 +14,7 @@ import {
   Loader2,
   RefreshCw,
   Lock,
-  Unlock
+  Unlock,
 } from 'lucide-react';
 import { useWallet } from '../../context/WalletContext';
 import {
@@ -252,23 +252,35 @@ export default function ApprovalsPage() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 max-w-5xl">
       {/* Header Bar */}
-      <div className="p-5 rounded-xl bg-white border border-slate-200/90 shadow-subtle flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div
+        className="p-5 rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-4"
+        style={{ background: '#141A27', border: '1px solid rgba(255,255,255,0.08)' }}
+      >
         <div>
-          <h2 className="text-base font-bold text-slate-900">
-            Owner Governance & Escalated Approvals
-          </h2>
-          <p className="text-xs text-slate-500 mt-1">
-            Deterministic policy rules escalate anomalies—such as recently modified payees or incomplete goods attestations—to the business owner for explicit onchain signoff.
+          <div className="flex items-center gap-2">
+            <KeyRound className="w-4 h-4" style={{ color: '#8B5CF6' }} />
+            <h2 className="text-base font-bold" style={{ color: '#F0F4FF' }}>
+              Owner Governance & Escalated Approvals
+            </h2>
+          </div>
+          <p className="text-xs mt-1" style={{ color: '#8B95B0' }}>
+            Deterministic policy rules escalate anomalies—such as recently modified payees—to the business owner for explicit onchain signoff.
           </p>
         </div>
 
         {/* Emergency Circuit Breaker */}
         <div className="flex items-center gap-3">
-          <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-50 border border-slate-200 text-xs">
-            <span className="text-slate-500">Vault Circuit Breaker:</span>
-            <span className={`font-semibold ${vaultState?.paused ? 'text-rose-600' : 'text-emerald-600'}`}>
+          <div
+            className="flex items-center gap-2 px-3 py-1.5 rounded-xl text-xs"
+            style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)' }}
+          >
+            <span style={{ color: '#8B95B0' }}>Circuit Breaker:</span>
+            <span
+              className="font-bold font-mono"
+              style={{ color: vaultState?.paused ? '#F87171' : '#34D399' }}
+            >
               {vaultState?.paused ? 'PAUSED' : 'NORMAL'}
             </span>
           </div>
@@ -276,13 +288,14 @@ export default function ApprovalsPage() {
           <button
             onClick={handleTogglePause}
             disabled={txState.status === 'prompting' || txState.status === 'mining'}
-            className={`px-3 py-1.5 rounded-lg text-xs font-semibold shadow-xs transition-all flex items-center gap-1.5 ${
+            className="px-3 py-1.5 rounded-xl text-xs font-semibold transition-all flex items-center gap-1.5 active:scale-95 disabled:opacity-40"
+            style={
               vaultState?.paused
-                ? 'bg-emerald-600 hover:bg-emerald-700 text-white'
-                : 'bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200'
-            }`}
+                ? { background: '#10B981', color: '#FFFFFF', boxShadow: '0 0 12px rgba(16,185,129,0.3)' }
+                : { background: 'rgba(239,68,68,0.12)', border: '1px solid rgba(239,68,68,0.25)', color: '#F87171' }
+            }
           >
-            {vaultState?.paused ? <Unlock className="w-3.5 h-3.5" /> : <Lock className="w-3.5 h-3.5 text-rose-600" />}
+            {vaultState?.paused ? <Unlock className="w-3.5 h-3.5" /> : <Lock className="w-3.5 h-3.5" />}
             <span>{vaultState?.paused ? 'Unpause Vault' : 'Emergency Pause'}</span>
           </button>
         </div>
@@ -290,14 +303,18 @@ export default function ApprovalsPage() {
 
       {/* Error or Notice Alert */}
       {errorMsg && (
-        <div className="p-3.5 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-xs flex items-center justify-between gap-3 animate-in fade-in">
+        <div
+          className="p-3.5 rounded-xl text-xs flex items-center justify-between gap-3 animate-in fade-in"
+          style={{ background: 'rgba(239,68,68,0.10)', border: '1px solid rgba(239,68,68,0.25)', color: '#F87171' }}
+        >
           <div className="flex items-center gap-2">
-            <AlertCircle className="w-4 h-4 text-rose-600 shrink-0" />
+            <AlertCircle className="w-4 h-4 text-rose-500 shrink-0" />
             <span>{errorMsg}</span>
           </div>
           <button
             onClick={() => setErrorMsg(null)}
-            className="text-xs text-rose-600 hover:underline shrink-0"
+            className="text-xs hover:underline shrink-0"
+            style={{ color: '#F87171' }}
           >
             Dismiss
           </button>
@@ -306,17 +323,20 @@ export default function ApprovalsPage() {
 
       {/* Transaction Progress Banner */}
       {txState.status !== 'idle' && (
-        <div className="p-4 rounded-xl bg-blue-50 border border-blue-200 text-blue-900 text-xs flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-xs animate-in fade-in">
+        <div
+          className="p-4 rounded-xl text-xs flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-xs animate-in fade-in"
+          style={{ background: 'rgba(139,92,246,0.12)', border: '1px solid rgba(139,92,246,0.30)', color: '#F0F4FF' }}
+        >
           <div className="flex items-center gap-2.5">
             {txState.status === 'prompting' || txState.status === 'mining' ? (
-              <Loader2 className="w-4 h-4 animate-spin text-blue-600 shrink-0" />
+              <Loader2 className="w-4 h-4 animate-spin text-violet-400 shrink-0" />
             ) : (
-              <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+              <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
             )}
             <div>
               <div className="font-semibold">{txState.msg}</div>
               {txState.txHash && (
-                <div className="text-[11px] font-mono text-blue-700 mt-0.5">
+                <div className="text-[11px] font-mono mt-0.5" style={{ color: '#22D3EE' }}>
                   Tx: {txState.txHash}
                 </div>
               )}
@@ -328,7 +348,8 @@ export default function ApprovalsPage() {
               href={`https://explorer.testnet.arc.io/tx/${txState.txHash}`}
               target="_blank"
               rel="noreferrer"
-              className="px-3 py-1.5 rounded-lg bg-white border border-blue-200 text-blue-700 hover:bg-blue-50 text-xs font-semibold flex items-center gap-1 self-start sm:self-auto shrink-0 shadow-xs"
+              className="px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1 self-start sm:self-auto shrink-0 transition-colors"
+              style={{ background: '#8B5CF6', color: '#FFFFFF' }}
             >
               <span>View Receipt</span>
               <ExternalLink className="w-3 h-3" />
@@ -342,31 +363,35 @@ export default function ApprovalsPage() {
         {items.map((item) => {
           const isPending = item.status === 'PENDING';
           const isApproved = item.status === 'APPROVED';
-          const isRejected = item.status === 'REJECTED';
 
           return (
             <div
               key={item.id}
-              className="p-6 rounded-xl bg-white border border-slate-200/90 shadow-subtle space-y-4"
+              className="p-6 rounded-2xl space-y-4 transition-all"
+              style={{ background: '#141A27', border: '1px solid rgba(255,255,255,0.08)' }}
             >
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-100">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3" style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
                 <div className="flex items-center gap-2.5">
-                  <span className="font-mono text-xs font-bold text-slate-800 bg-slate-100 px-2 py-0.5 rounded border border-slate-200">
+                  <span
+                    className="font-mono text-xs font-bold px-2 py-0.5 rounded"
+                    style={{ background: 'rgba(255,255,255,0.05)', color: '#F0F4FF', border: '1px solid rgba(255,255,255,0.10)' }}
+                  >
                     {item.id}
                   </span>
-                  <span className="text-xs font-semibold text-slate-800">{item.vendor}</span>
-                  <span className="text-xs text-slate-400">· {item.businessName}</span>
+                  <span className="text-xs font-semibold" style={{ color: '#F0F4FF' }}>{item.vendor}</span>
+                  <span className="text-xs" style={{ color: '#4A5568' }}>· {item.businessName}</span>
                 </div>
 
                 <div className="flex items-center gap-2">
                   <span
-                    className={`px-2.5 py-1 rounded text-xs font-semibold flex items-center gap-1 ${
+                    className="px-2.5 py-1 rounded-full text-xs font-semibold flex items-center gap-1"
+                    style={
                       isPending
-                        ? 'bg-amber-50 text-amber-700 border border-amber-200'
+                        ? { background: 'rgba(245,158,11,0.12)', color: '#FCD34D', border: '1px solid rgba(245,158,11,0.25)' }
                         : isApproved
-                        ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
-                        : 'bg-slate-100 text-slate-600 border border-slate-200'
-                    }`}
+                        ? { background: 'rgba(16,185,129,0.12)', color: '#34D399', border: '1px solid rgba(16,185,129,0.25)' }
+                        : { background: 'rgba(255,255,255,0.05)', color: '#8B95B0', border: '1px solid rgba(255,255,255,0.10)' }
+                    }
                   >
                     {isPending ? (
                       <Clock className="w-3.5 h-3.5" />
@@ -383,46 +408,49 @@ export default function ApprovalsPage() {
               {/* Main Info Columns */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
                 <div>
-                  <div className="text-[10px] text-slate-400 uppercase font-semibold">Payment Amount</div>
-                  <div className="text-base font-bold text-slate-900 font-mono mt-0.5">
+                  <div className="text-[10px] uppercase font-semibold" style={{ color: '#4A5568' }}>Payment Amount</div>
+                  <div className="text-base font-bold font-mono mt-0.5" style={{ color: '#F0F4FF' }}>
                     ${item.amountUsdc} USDC
                   </div>
                 </div>
 
                 <div>
-                  <div className="text-[10px] text-slate-400 uppercase font-semibold">Payee Address</div>
-                  <div className="font-mono text-slate-700 mt-0.5 truncate" title={item.payeeAddress}>
+                  <div className="text-[10px] uppercase font-semibold" style={{ color: '#4A5568' }}>Payee Address</div>
+                  <div className="font-mono mt-0.5 truncate" style={{ color: '#22D3EE' }} title={item.payeeAddress}>
                     {item.payeeAddress}
                   </div>
                 </div>
 
                 <div>
-                  <div className="text-[10px] text-slate-400 uppercase font-semibold">Escalation Trigger</div>
-                  <div className="font-semibold text-slate-800 mt-0.5 truncate">
+                  <div className="text-[10px] uppercase font-semibold" style={{ color: '#4A5568' }}>Escalation Trigger</div>
+                  <div className="font-semibold mt-0.5 truncate" style={{ color: '#A78BFA' }}>
                     {item.actionType}
                   </div>
                 </div>
               </div>
 
               {/* Reason & Agent Calculus */}
-              <div className="p-3.5 rounded-lg bg-slate-50 border border-slate-200/80 text-xs space-y-1.5 leading-relaxed">
+              <div
+                className="p-3.5 rounded-xl text-xs space-y-1.5 leading-relaxed"
+                style={{ background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.06)' }}
+              >
                 <div>
-                  <strong className="text-slate-800">Anomaly Reason: </strong>
-                  <span className="text-slate-600">{item.reason}</span>
+                  <strong style={{ color: '#F0F4FF' }}>Anomaly Reason: </strong>
+                  <span style={{ color: '#8B95B0' }}>{item.reason}</span>
                 </div>
                 <div>
-                  <strong className="text-slate-800 font-mono">Agent Calculus: </strong>
-                  <span className="text-slate-600">{item.agentCalculus}</span>
+                  <strong className="font-mono" style={{ color: '#22D3EE' }}>Agent Calculus: </strong>
+                  <span style={{ color: '#8B95B0' }}>{item.agentCalculus}</span>
                 </div>
               </div>
 
               {/* Action Buttons */}
               <div className="pt-2 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                <div className="text-[11px] text-slate-400">
+                <div className="text-[11px]" style={{ color: '#4A5568' }}>
                   {item.approvedBy && (
                     <span>
-                      Signed by: <strong className="text-slate-700 font-mono">{item.approvedBy}</strong>
-                      {item.isRealTx && <span className="ml-1 text-emerald-600 font-semibold">(Onchain Arc Transaction)</span>}
+                      Signed by: <strong className="font-mono" style={{ color: '#F0F4FF' }}>{item.approvedBy}</strong>
+                      {item.isRealTx && <span className="ml-1 text-emerald-400 font-semibold">(Onchain Arc Transaction)</span>}
                     </span>
                   )}
                 </div>
@@ -431,13 +459,15 @@ export default function ApprovalsPage() {
                   <div className="flex items-center gap-2 self-start sm:self-auto">
                     <button
                       onClick={() => handleDecision(item.id, 'REJECTED')}
-                      className="px-3 py-1.5 rounded-lg bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 text-xs font-semibold transition-colors"
+                      className="px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-colors active:scale-95"
+                      style={{ background: 'rgba(239,68,68,0.10)', border: '1px solid rgba(239,68,68,0.25)', color: '#F87171' }}
                     >
                       Reject Payee
                     </button>
                     <button
                       onClick={() => handleDecision(item.id, 'APPROVED')}
-                      className="px-4 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold shadow-xs transition-all flex items-center gap-1.5"
+                      className="px-4 py-1.5 rounded-xl text-white text-xs font-semibold transition-all flex items-center gap-1.5 active:scale-95"
+                      style={{ background: '#8B5CF6', boxShadow: '0 0 16px rgba(139,92,246,0.3)' }}
                     >
                       <CheckCircle2 className="w-3.5 h-3.5" />
                       <span>Approve Payee (MetaMask)</span>

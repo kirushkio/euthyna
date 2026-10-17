@@ -13,7 +13,8 @@ import {
   KeyRound,
   Shield,
   Bot,
-  UserCheck
+  UserCheck,
+  Loader2,
 } from 'lucide-react';
 import { useWallet, TreasuryRole } from '../context/WalletContext';
 
@@ -36,7 +37,6 @@ export const WalletButton: React.FC = () => {
   const [copied, setCopied] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  // Close dropdown on outside click
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
@@ -55,49 +55,45 @@ export const WalletButton: React.FC = () => {
     }
   };
 
-  const formatAddress = (addr: string) => {
-    return `${addr.slice(0, 6)}...${addr.slice(-4)}`;
-  };
+  const formatAddress = (addr: string) => `${addr.slice(0, 6)}…${addr.slice(-4)}`;
 
   const getRoleBadge = (role: TreasuryRole) => {
     switch (role) {
       case 'OWNER':
-        return {
-          bg: 'bg-amber-50 text-amber-700 border-amber-200',
-          icon: <KeyRound className="w-3 h-3 text-amber-600" />
-        };
+        return { color: '#FCD34D', bg: 'rgba(245,158,11,0.12)', border: 'rgba(245,158,11,0.25)', icon: <KeyRound className="w-3 h-3" /> };
       case 'REGISTRAR':
-        return {
-          bg: 'bg-blue-50 text-blue-700 border-blue-200',
-          icon: <UserCheck className="w-3 h-3 text-blue-600" />
-        };
+        return { color: '#67E8F9', bg: 'rgba(34,211,238,0.10)', border: 'rgba(34,211,238,0.20)', icon: <UserCheck className="w-3 h-3" /> };
       case 'AGENT':
-        return {
-          bg: 'bg-emerald-50 text-emerald-700 border-emerald-200',
-          icon: <Bot className="w-3 h-3 text-emerald-600" />
-        };
+        return { color: '#34D399', bg: 'rgba(16,185,129,0.10)', border: 'rgba(16,185,129,0.20)', icon: <Bot className="w-3 h-3" /> };
       case 'GUARDIAN':
-        return {
-          bg: 'bg-rose-50 text-rose-700 border-rose-200',
-          icon: <Shield className="w-3 h-3 text-rose-600" />
-        };
+        return { color: '#F87171', bg: 'rgba(239,68,68,0.10)', border: 'rgba(239,68,68,0.20)', icon: <Shield className="w-3 h-3" /> };
       default:
-        return {
-          bg: 'bg-slate-100 text-slate-700 border-slate-200',
-          icon: null
-        };
+        return { color: '#8B95B0', bg: 'rgba(255,255,255,0.05)', border: 'rgba(255,255,255,0.10)', icon: null };
     }
   };
 
+  /* ── Not connected ── */
   if (!isConnected) {
     return (
       <button
         onClick={connect}
         disabled={isConnecting}
-        className="flex items-center gap-2 px-3.5 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-medium text-xs shadow-sm transition-all active:scale-95 disabled:opacity-50"
+        className="flex items-center gap-2 px-3.5 py-1.5 rounded-xl text-sm font-semibold text-white transition-all active:scale-95 disabled:opacity-50"
+        style={{ background: '#8B5CF6' }}
+        onMouseEnter={e => { if (!isConnecting) (e.currentTarget as HTMLElement).style.background = '#7C3AED'; }}
+        onMouseLeave={e => { if (!isConnecting) (e.currentTarget as HTMLElement).style.background = '#8B5CF6'; }}
       >
-        <Wallet className="w-3.5 h-3.5" />
-        <span>{isConnecting ? 'Connecting...' : 'Connect Wallet'}</span>
+        {isConnecting ? (
+          <>
+            <Loader2 className="w-3.5 h-3.5 animate-spin" />
+            <span className="text-xs">Connecting…</span>
+          </>
+        ) : (
+          <>
+            <Wallet className="w-3.5 h-3.5" />
+            <span className="text-xs">Connect Wallet</span>
+          </>
+        )}
       </button>
     );
   }
@@ -107,68 +103,92 @@ export const WalletButton: React.FC = () => {
   return (
     <div className="relative" ref={dropdownRef}>
       <div className="flex items-center gap-2">
-        {/* Network Warning Pill if not on Arc Testnet */}
-        {!isArcTestnet ? (
+
+        {/* Wrong network warning */}
+        {!isArcTestnet && (
           <button
             onClick={switchToArc}
-            className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-amber-50 border border-amber-200 text-amber-800 text-xs font-medium hover:bg-amber-100 transition-colors shadow-sm"
+            className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-medium transition-all"
+            style={{ background: 'rgba(245,158,11,0.10)', border: '1px solid rgba(245,158,11,0.25)', color: '#FCD34D' }}
             title="Click to switch wallet to Arc Testnet"
           >
-            <AlertTriangle className="w-3.5 h-3.5 text-amber-600 animate-pulse" />
+            <AlertTriangle className="w-3.5 h-3.5 animate-pulse" />
             <span>Switch to Arc</span>
           </button>
-        ) : (
-          <div className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-50 border border-slate-200 text-xs font-mono text-slate-600">
-            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-            <span>Arc #5042002</span>
-          </div>
         )}
 
-        {/* Main Wallet Pill with Dropdown Trigger */}
+        {/* Connected wallet pill */}
         <button
           onClick={() => setIsOpen(!isOpen)}
-          className={`flex items-center gap-2 px-3 py-1.5 rounded-xl border text-xs font-medium transition-all shadow-2xs ${
-            isArcTestnet
-              ? 'bg-white border-slate-200 text-slate-800 hover:bg-slate-50'
-              : 'bg-amber-50 border-amber-200 text-amber-900'
-          }`}
+          className="flex items-center gap-2 px-3 py-1.5 rounded-xl text-xs font-medium transition-all"
+          style={{
+            background: 'rgba(255,255,255,0.05)',
+            border: '1px solid rgba(255,255,255,0.10)',
+            color: '#F0F4FF',
+          }}
         >
           <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-          <span className="font-mono text-slate-800 font-semibold">
-            {address ? formatAddress(address) : ''}
+          <span className="font-mono font-semibold">{address ? formatAddress(address) : ''}</span>
+          {/* Role badge */}
+          <span
+            className="hidden sm:inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-bold"
+            style={{ background: roleMeta.bg, color: roleMeta.color, border: `1px solid ${roleMeta.border}` }}
+          >
+            {roleMeta.icon}
+            {activeRole}
           </span>
           <ChevronDown
-            className={`w-3.5 h-3.5 text-slate-400 transition-transform ${
-              isOpen ? 'rotate-180' : ''
-            }`}
+            className="w-3.5 h-3.5 transition-transform"
+            style={{ color: '#4A5568', transform: isOpen ? 'rotate(180deg)' : 'none' }}
           />
         </button>
       </div>
 
-      {/* Dropdown Menu */}
+      {/* ── Dropdown ── */}
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-72 rounded-xl bg-white border border-slate-200 shadow-xl p-4 z-50 space-y-3.5 font-sans animate-in fade-in slide-in-from-top-1 text-slate-800">
-          {/* Header & Account */}
+        <div
+          className="absolute right-0 mt-2 w-76 rounded-2xl p-4 z-50 space-y-3 animate-fade-in"
+          style={{
+            background: '#141A27',
+            border: '1px solid rgba(255,255,255,0.10)',
+            boxShadow: '0 20px 60px rgba(0,0,0,0.6)',
+            minWidth: '280px',
+          }}
+        >
+          {/* Header */}
           <div>
-            <div className="flex items-center justify-between text-xs text-slate-500 mb-1.5">
+            <div className="flex items-center justify-between text-xs mb-2" style={{ color: '#4A5568' }}>
               <span>Connected Account</span>
-              <span className="flex items-center gap-1 text-[11px] text-emerald-600 font-medium">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-                Arc Testnet
-              </span>
+              {isArcTestnet ? (
+                <span className="flex items-center gap-1 text-[11px]" style={{ color: '#34D399' }}>
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                  Arc Testnet
+                </span>
+              ) : (
+                <span className="flex items-center gap-1 text-[11px]" style={{ color: '#FCD34D' }}>
+                  <AlertTriangle className="w-3 h-3" />
+                  Wrong Network
+                </span>
+              )}
             </div>
-            <div className="p-2.5 rounded-lg bg-slate-50 border border-slate-200/80 flex items-center justify-between">
-              <span className="font-mono text-xs text-slate-800 font-semibold">
-                {address ? formatAddress(address) : ''}
+
+            {/* Address row */}
+            <div
+              className="p-2.5 rounded-xl flex items-center justify-between"
+              style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }}
+            >
+              <span className="font-mono text-xs font-semibold" style={{ color: '#F0F4FF' }}>
+                {address || ''}
               </span>
               <div className="flex items-center gap-1">
                 <button
                   onClick={handleCopy}
-                  className="p-1 rounded hover:bg-slate-200 text-slate-500 hover:text-slate-800 transition-colors"
+                  className="p-1 rounded transition-colors"
+                  style={{ color: '#4A5568' }}
                   title="Copy full address"
                 >
                   {copied ? (
-                    <Check className="w-3.5 h-3.5 text-emerald-600" />
+                    <Check className="w-3.5 h-3.5 text-emerald-400" />
                   ) : (
                     <Copy className="w-3.5 h-3.5" />
                   )}
@@ -178,7 +198,8 @@ export const WalletButton: React.FC = () => {
                     href={`https://explorer.testnet.arc.io/address/${address}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="p-1 rounded hover:bg-slate-200 text-slate-500 hover:text-slate-800 transition-colors"
+                    className="p-1 rounded transition-colors"
+                    style={{ color: '#4A5568' }}
                     title="View on Arc Explorer"
                   >
                     <ExternalLink className="w-3.5 h-3.5" />
@@ -188,56 +209,68 @@ export const WalletButton: React.FC = () => {
             </div>
           </div>
 
-          {/* USDC Balance */}
-          <div className="p-2.5 rounded-lg bg-blue-50/70 border border-blue-100 flex items-center justify-between">
+          {/* USDC balance */}
+          <div
+            className="p-2.5 rounded-xl flex items-center justify-between"
+            style={{ background: 'rgba(139,92,246,0.08)', border: '1px solid rgba(139,92,246,0.15)' }}
+          >
             <div>
-              <div className="text-[10px] text-blue-600 uppercase font-semibold">
-                Gas / Wallet Balance
+              <div className="text-[10px] font-semibold uppercase tracking-wide" style={{ color: '#A78BFA' }}>
+                Wallet Balance
               </div>
-              <div className="text-sm font-bold text-blue-950 font-mono">
+              <div className="text-sm font-bold font-mono" style={{ color: '#F0F4FF' }}>
                 {usdcBalance} USDC
               </div>
             </div>
-            <span className="text-[10px] font-medium text-blue-600 bg-white px-2 py-0.5 rounded border border-blue-200">
+            <span
+              className="text-[10px] font-semibold px-2 py-0.5 rounded-lg"
+              style={{ background: 'rgba(255,255,255,0.06)', color: '#8B95B0', border: '1px solid rgba(255,255,255,0.08)' }}
+            >
               Native Gas
             </span>
           </div>
 
           {/* Demo Role Switcher */}
-          <div className="pt-1 border-t border-slate-100">
-            <div className="text-[11px] text-slate-400 font-medium mb-1.5">
+          <div style={{ borderTop: '1px solid rgba(255,255,255,0.06)', paddingTop: '10px' }}>
+            <div className="text-[11px] font-medium mb-2" style={{ color: '#4A5568' }}>
               Simulate Role (Demo Mode):
             </div>
-            <div className="grid grid-cols-2 gap-1.5 text-xs">
-              {(['OWNER', 'REGISTRAR', 'AGENT', 'GUARDIAN'] as TreasuryRole[]).map(r => (
-                <button
-                  key={r}
-                  onClick={() => {
-                    setDemoRole(r);
-                    setIsOpen(false);
-                  }}
-                  className={`px-2 py-1.5 rounded-md text-[11px] font-medium text-left border transition-all ${
-                    activeRole === r
-                      ? 'bg-blue-600 text-white border-blue-600 shadow-sm'
-                      : 'bg-slate-50 hover:bg-slate-100 text-slate-700 border-slate-200'
-                  }`}
-                >
-                  {r}
-                </button>
-              ))}
+            <div className="grid grid-cols-2 gap-1.5">
+              {(['OWNER', 'REGISTRAR', 'AGENT', 'GUARDIAN'] as TreasuryRole[]).map(r => {
+                const meta = getRoleBadge(r);
+                const isActive = activeRole === r;
+                return (
+                  <button
+                    key={r}
+                    onClick={() => { setDemoRole(r); setIsOpen(false); }}
+                    className="px-2 py-1.5 rounded-lg text-[11px] font-semibold text-left transition-all"
+                    style={
+                      isActive
+                        ? { background: meta.bg, color: meta.color, border: `1px solid ${meta.border}` }
+                        : { background: 'rgba(255,255,255,0.04)', color: '#8B95B0', border: '1px solid rgba(255,255,255,0.08)' }
+                    }
+                  >
+                    <span className="flex items-center gap-1">
+                      {meta.icon}
+                      {r}
+                    </span>
+                  </button>
+                );
+              })}
             </div>
           </div>
 
-          {/* Disconnect Action */}
-          <div className="pt-2 border-t border-slate-100 flex items-center justify-between">
-            <span className="text-[11px] text-slate-400">MetaMask Session</span>
+          {/* Disconnect */}
+          <div className="flex items-center justify-between" style={{ borderTop: '1px solid rgba(255,255,255,0.06)', paddingTop: '10px' }}>
+            <span className="text-[11px]" style={{ color: '#4A5568' }}>MetaMask Session</span>
             <button
               onClick={async () => {
                 setIsOpen(false);
                 await disconnect();
                 router.replace('/');
               }}
-              className="flex items-center gap-1 text-xs text-rose-600 hover:text-rose-700 font-medium hover:underline"
+              className="flex items-center gap-1 text-xs font-medium transition-colors"
+              style={{ color: '#F87171' }}
             >
               <LogOut className="w-3 h-3" />
               <span>Disconnect</span>

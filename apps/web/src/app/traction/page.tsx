@@ -2,15 +2,10 @@
 
 import React, { useState } from 'react';
 import {
-  Flame,
   ExternalLink,
-  ShieldCheck,
-  ArrowRight,
-  CheckCircle2,
   Download,
-  Building2,
-  FileSpreadsheet,
-  Check
+  Check,
+  BarChart3,
 } from 'lucide-react';
 
 const SAMPLE_TXS = [
@@ -95,56 +90,76 @@ export default function TractionPage() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 max-w-5xl">
       {/* Header Bar */}
-      <div className="p-5 rounded-xl bg-white border border-slate-200/90 shadow-subtle flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div
+        className="p-5 rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-4"
+        style={{ background: '#141A27', border: '1px solid rgba(255,255,255,0.08)' }}
+      >
         <div>
-          <h2 className="text-base font-bold text-slate-900">
-            Treasury Reports & Settled Activity
-          </h2>
-          <p className="text-xs text-slate-500 mt-1">
-            Aggregated treasury statistics across pilot business vaults and verified Arc Testnet settlements.
+          <div className="flex items-center gap-2">
+            <BarChart3 className="w-4 h-4 text-violet-400" />
+            <h2 className="text-base font-bold" style={{ color: '#F0F4FF' }}>
+              Treasury Reports & Settled Activity
+            </h2>
+          </div>
+          <p className="text-xs mt-1" style={{ color: '#8B95B0' }}>
+            Aggregated statistics across business vaults and verified Arc Testnet settlements.
           </p>
         </div>
 
-        <div className="flex items-center gap-2">
-          <button
-            onClick={handleExportCSV}
-            className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold shadow-xs transition-all"
-          >
-            {downloaded ? <Check className="w-3.5 h-3.5" /> : <Download className="w-3.5 h-3.5" />}
-            <span>{downloaded ? 'Exported CSV!' : 'Export Report (CSV)'}</span>
-          </button>
-        </div>
+        <button
+          onClick={handleExportCSV}
+          className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-white text-xs font-semibold transition-all active:scale-95"
+          style={{ background: '#8B5CF6', boxShadow: '0 0 16px rgba(139,92,246,0.3)' }}
+        >
+          {downloaded ? <Check className="w-3.5 h-3.5" /> : <Download className="w-3.5 h-3.5" />}
+          <span>{downloaded ? 'Exported CSV!' : 'Export Report (CSV)'}</span>
+        </button>
       </div>
 
       {/* Summary Metric Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
-        <div className="p-5 rounded-xl bg-white border border-slate-200/90 shadow-subtle">
-          <div className="text-xs font-medium text-slate-500">Pilot Businesses Managed</div>
-          <div className="text-2xl font-bold font-mono text-slate-900 mt-1">5 Accounts</div>
-          <div className="text-[11px] text-slate-400 mt-1">1 Live Vault on Arc Testnet</div>
+        <div
+          className="p-5 rounded-2xl space-y-1"
+          style={{ background: '#141A27', border: '1px solid rgba(255,255,255,0.08)' }}
+        >
+          <div className="text-xs font-medium" style={{ color: '#8B95B0' }}>Pilot Businesses Managed</div>
+          <div className="text-2xl font-bold font-mono" style={{ color: '#F0F4FF' }}>5 Accounts</div>
+          <div className="text-[11px]" style={{ color: '#4A5568' }}>1 Live Vault on Arc Testnet</div>
         </div>
 
-        <div className="p-5 rounded-xl bg-white border border-slate-200/90 shadow-subtle">
-          <div className="text-xs font-medium text-slate-500">Total Settled Volume</div>
-          <div className="text-2xl font-bold font-mono text-slate-900 mt-1">$11,740.00 USDC</div>
-          <div className="text-[11px] text-emerald-600 font-medium mt-1">100% Onchain Execution</div>
+        <div
+          className="p-5 rounded-2xl space-y-1"
+          style={{ background: '#141A27', border: '1px solid rgba(255,255,255,0.08)' }}
+        >
+          <div className="text-xs font-medium" style={{ color: '#8B95B0' }}>Total Settled Volume</div>
+          <div className="text-2xl font-bold font-mono" style={{ color: '#F0F4FF' }}>$11,740.00 USDC</div>
+          <div className="text-[11px] font-medium" style={{ color: '#34D399' }}>100% Onchain Execution</div>
         </div>
 
-        <div className="p-5 rounded-xl bg-white border border-slate-200/90 shadow-subtle">
-          <div className="text-xs font-medium text-slate-500">Annualized Yield Capture</div>
-          <div className="text-2xl font-bold font-mono text-slate-900 mt-1">5.20% APR</div>
-          <div className="text-[11px] text-blue-600 font-medium mt-1">SimYield Venue Allocation</div>
+        <div
+          className="p-5 rounded-2xl space-y-1"
+          style={{ background: '#141A27', border: '1px solid rgba(255,255,255,0.08)' }}
+        >
+          <div className="text-xs font-medium" style={{ color: '#8B95B0' }}>Annualized Yield Capture</div>
+          <div className="text-2xl font-bold font-mono" style={{ color: '#F0F4FF' }}>5.20% APR</div>
+          <div className="text-[11px] font-medium" style={{ color: '#22D3EE' }}>SimYield Venue Allocation</div>
         </div>
       </div>
 
       {/* Pilot Accounts Table */}
-      <div className="p-6 rounded-xl bg-white border border-slate-200/90 shadow-subtle space-y-4">
-        <h3 className="text-sm font-bold text-slate-900">Pilot Business Vaults</h3>
+      <div
+        className="p-6 rounded-2xl space-y-4"
+        style={{ background: '#141A27', border: '1px solid rgba(255,255,255,0.08)' }}
+      >
+        <h3 className="text-sm font-bold" style={{ color: '#F0F4FF' }}>Pilot Business Vaults</h3>
         <div className="overflow-x-auto">
           <table className="w-full text-xs text-left">
-            <thead className="bg-slate-50 text-slate-500 font-semibold border-y border-slate-200">
+            <thead
+              className="text-xs font-semibold"
+              style={{ background: 'rgba(255,255,255,0.02)', color: '#8B95B0', borderBottom: '1px solid rgba(255,255,255,0.06)' }}
+            >
               <tr>
                 <th className="py-3 px-4">Business Name</th>
                 <th className="py-3 px-4">Vault Address</th>
@@ -153,29 +168,33 @@ export default function TractionPage() {
                 <th className="py-3 px-4">Status</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100 font-mono text-slate-700">
+            <tbody className="divide-y font-mono" style={{ borderColor: 'rgba(255,255,255,0.04)', color: '#8B95B0' }}>
               {PILOT_BUSINESSES_DATA.map((b, i) => (
-                <tr key={i}>
-                  <td className="py-3 px-4 font-sans font-medium text-slate-900">{b.name}</td>
-                  <td className="py-3 px-4 text-slate-500">
+                <tr key={i} className="hover:bg-white/[0.02] transition-colors">
+                  <td className="py-3 px-4 font-sans font-medium" style={{ color: '#F0F4FF' }}>{b.name}</td>
+                  <td className="py-3 px-4">
                     <a
                       href={`https://explorer.testnet.arc.io/address/${b.vault}`}
                       target="_blank"
                       rel="noreferrer"
-                      className="text-blue-600 hover:underline flex items-center gap-1 font-mono"
+                      className="hover:underline flex items-center gap-1 font-mono transition-colors"
+                      style={{ color: '#8B5CF6' }}
                     >
                       <span>{b.vault.slice(0, 10)}...{b.vault.slice(-8)}</span>
                       <ExternalLink className="w-2.5 h-2.5" />
                     </a>
                   </td>
-                  <td className="py-3 px-4 font-bold text-slate-800">{b.totalTreasury}</td>
-                  <td className="py-3 px-4">{b.floor}</td>
+                  <td className="py-3 px-4 font-bold" style={{ color: '#F0F4FF' }}>{b.totalTreasury}</td>
+                  <td className="py-3 px-4" style={{ color: '#67E8F9' }}>{b.floor}</td>
                   <td className="py-3 px-4">
-                    <span className={`px-2 py-0.5 rounded text-[10px] font-semibold ${
-                      b.status === 'Live Vault'
-                        ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
-                        : 'bg-slate-100 text-slate-600'
-                    }`}>
+                    <span
+                      className="px-2 py-0.5 rounded text-[10px] font-semibold"
+                      style={
+                        b.status === 'Live Vault'
+                          ? { background: 'rgba(16,185,129,0.12)', color: '#34D399', border: '1px solid rgba(16,185,129,0.25)' }
+                          : { background: 'rgba(255,255,255,0.04)', color: '#8B95B0', border: '1px solid rgba(255,255,255,0.08)' }
+                      }
+                    >
                       {b.status}
                     </span>
                   </td>
@@ -187,11 +206,17 @@ export default function TractionPage() {
       </div>
 
       {/* Transaction Activity Table */}
-      <div className="p-6 rounded-xl bg-white border border-slate-200/90 shadow-subtle space-y-4">
-        <h3 className="text-sm font-bold text-slate-900">Recent Settled Activity Log</h3>
+      <div
+        className="p-6 rounded-2xl space-y-4"
+        style={{ background: '#141A27', border: '1px solid rgba(255,255,255,0.08)' }}
+      >
+        <h3 className="text-sm font-bold" style={{ color: '#F0F4FF' }}>Recent Settled Activity Log</h3>
         <div className="overflow-x-auto">
           <table className="w-full text-xs text-left">
-            <thead className="bg-slate-50 text-slate-500 font-semibold border-y border-slate-200">
+            <thead
+              className="text-xs font-semibold"
+              style={{ background: 'rgba(255,255,255,0.02)', color: '#8B95B0', borderBottom: '1px solid rgba(255,255,255,0.06)' }}
+            >
               <tr>
                 <th className="py-3 px-4">Action</th>
                 <th className="py-3 px-4">Amount</th>
@@ -201,24 +226,28 @@ export default function TractionPage() {
                 <th className="py-3 px-4">Explorer</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100 font-mono text-slate-700">
+            <tbody className="divide-y font-mono" style={{ borderColor: 'rgba(255,255,255,0.04)', color: '#8B95B0' }}>
               {SAMPLE_TXS.map((t, i) => (
-                <tr key={i}>
-                  <td className="py-3 px-4 font-sans font-medium text-slate-900">
-                    <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-blue-50 text-blue-700 border border-blue-200">
+                <tr key={i} className="hover:bg-white/[0.02] transition-colors">
+                  <td className="py-3 px-4 font-sans font-medium">
+                    <span
+                      className="px-2 py-0.5 rounded text-[10px] font-bold"
+                      style={{ background: 'rgba(139,92,246,0.12)', color: '#A78BFA', border: '1px solid rgba(139,92,246,0.25)' }}
+                    >
                       {t.type}
                     </span>
                   </td>
-                  <td className="py-3 px-4 font-bold text-slate-900">{t.amount}</td>
-                  <td className="py-3 px-4 font-sans text-slate-600">{t.target}</td>
-                  <td className="py-3 px-4 text-purple-700">#{t.block}</td>
-                  <td className="py-3 px-4 font-sans text-slate-400">{t.time}</td>
+                  <td className="py-3 px-4 font-bold" style={{ color: '#F0F4FF' }}>{t.amount}</td>
+                  <td className="py-3 px-4 font-sans" style={{ color: '#8B95B0' }}>{t.target}</td>
+                  <td className="py-3 px-4" style={{ color: '#22D3EE' }}>#{t.block}</td>
+                  <td className="py-3 px-4 font-sans" style={{ color: '#4A5568' }}>{t.time}</td>
                   <td className="py-3 px-4 font-sans">
                     <a
                       href={`https://explorer.testnet.arc.io/tx/${t.txHash}`}
                       target="_blank"
                       rel="noreferrer"
-                      className="text-blue-600 hover:underline flex items-center gap-1 font-medium"
+                      className="hover:underline flex items-center gap-1 font-medium transition-colors"
+                      style={{ color: '#8B5CF6' }}
                     >
                       <span>ArcScan</span>
                       <ExternalLink className="w-2.5 h-2.5" />

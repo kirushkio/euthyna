@@ -3,31 +3,244 @@
 @tailwind utilities;
 
 :root {
-  --background: #F8FAFC;
-  --foreground: #0F172A;
+  /* Dark theme palette */
+  --bg-base: #080B12;
+  --bg-surface: #101522;
+  --bg-card: #141A27;
+  --bg-card-hover: #1B2236;
+  --border-subtle: rgba(255,255,255,0.06);
+  --border-default: rgba(255,255,255,0.10);
+
+  /* Accent colors */
+  --accent-violet: #8B5CF6;
+  --accent-violet-dim: rgba(139,92,246,0.15);
+  --accent-cyan: #22D3EE;
+  --accent-cyan-dim: rgba(34,211,238,0.12);
+
+  /* State colors */
+  --success: #10B981;
+  --success-dim: rgba(16,185,129,0.12);
+  --warning: #F59E0B;
+  --warning-dim: rgba(245,158,11,0.12);
+  --danger: #EF4444;
+  --danger-dim: rgba(239,68,68,0.10);
+
+  /* Text */
+  --text-primary: #F0F4FF;
+  --text-secondary: #8B95B0;
+  --text-muted: #4A5568;
+
+  /* Glow effects */
+  --glow-violet: 0 0 24px rgba(139,92,246,0.20);
+  --glow-cyan: 0 0 20px rgba(34,211,238,0.15);
+}
+
+html {
+  color-scheme: dark;
 }
 
 body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  color: var(--text-primary);
+  background: var(--bg-base);
+  font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   min-height: 100vh;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Custom modern scrollbars */
+/* Custom modern scrollbars — dark theme */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 5px;
+  height: 5px;
 }
 ::-webkit-scrollbar-track {
-  background: #F1F5F9;
+  background: var(--bg-card);
 }
 ::-webkit-scrollbar-thumb {
-  background: #CBD5E1;
-  border-radius: 3px;
+  background: rgba(139,92,246,0.35);
+  border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #94A3B8;
+  background: rgba(139,92,246,0.55);
+}
+
+/* Selection */
+::selection {
+  background: rgba(139,92,246,0.30);
+  color: #ffffff;
+}
+
+/* Smooth transitions for interactive elements */
+* {
+  transition-property: color, background-color, border-color, box-shadow, opacity, transform;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+}
+
+/* Focus ring — accessible and on-brand */
+:focus-visible {
+  outline: 2px solid var(--accent-violet);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Euthyna design system utility classes */
+@layer components {
+  .card {
+    @apply rounded-2xl border;
+    background: var(--bg-card);
+    border-color: var(--border-default);
+  }
+
+  .card-hover {
+    @apply rounded-2xl border transition-all;
+    background: var(--bg-card);
+    border-color: var(--border-default);
+  }
+  .card-hover:hover {
+    background: var(--bg-card-hover);
+    border-color: rgba(255,255,255,0.14);
+    box-shadow: 0 4px 24px rgba(0,0,0,0.3);
+  }
+
+  .btn-primary {
+    @apply inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold text-white transition-all active:scale-95;
+    background: var(--accent-violet);
+  }
+  .btn-primary:hover {
+    background: #7C3AED;
+    box-shadow: var(--glow-violet);
+  }
+  .btn-primary:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all active:scale-95;
+    background: var(--bg-card-hover);
+    border: 1px solid var(--border-default);
+    color: var(--text-primary);
+  }
+  .btn-secondary:hover {
+    border-color: rgba(255,255,255,0.18);
+    background: rgba(255,255,255,0.06);
+  }
+
+  .btn-danger {
+    @apply inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium text-red-400 transition-all active:scale-95;
+    background: rgba(239,68,68,0.08);
+    border: 1px solid rgba(239,68,68,0.20);
+  }
+  .btn-danger:hover {
+    background: rgba(239,68,68,0.14);
+    color: #f87171;
+  }
+
+  .metric-value {
+    @apply text-2xl font-bold font-mono;
+    color: var(--text-primary);
+  }
+
+  .label-muted {
+    @apply text-xs font-medium;
+    color: var(--text-secondary);
+  }
+
+  .status-dot-green {
+    @apply w-2 h-2 rounded-full bg-emerald-500 animate-pulse;
+  }
+  .status-dot-amber {
+    @apply w-2 h-2 rounded-full bg-amber-500;
+  }
+  .status-dot-gray {
+    @apply w-2 h-2 rounded-full bg-gray-600;
+  }
+
+  /* Badge variants */
+  .badge-violet {
+    @apply inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wide;
+    background: var(--accent-violet-dim);
+    color: #A78BFA;
+    border: 1px solid rgba(139,92,246,0.25);
+  }
+  .badge-cyan {
+    @apply inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wide;
+    background: var(--accent-cyan-dim);
+    color: #67E8F9;
+    border: 1px solid rgba(34,211,238,0.20);
+  }
+  .badge-green {
+    @apply inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wide;
+    background: var(--success-dim);
+    color: #34D399;
+    border: 1px solid rgba(16,185,129,0.20);
+  }
+  .badge-amber {
+    @apply inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wide;
+    background: var(--warning-dim);
+    color: #FCD34D;
+    border: 1px solid rgba(245,158,11,0.20);
+  }
+  .badge-red {
+    @apply inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wide;
+    background: var(--danger-dim);
+    color: #F87171;
+    border: 1px solid rgba(239,68,68,0.20);
+  }
+
+  /* Sidebar nav item active state */
+  .nav-active {
+    background: var(--accent-violet-dim);
+    color: #A78BFA;
+    border-left: 2px solid var(--accent-violet);
+  }
+}
+
+/* CSS 3D Vault animation — reduced motion safe */
+@media (prefers-reduced-motion: no-preference) {
+  .vault-float {
+    animation: vaultFloat 6s ease-in-out infinite;
+  }
+  .vault-ring {
+    animation: ringRotate 12s linear infinite;
+  }
+  .vault-ring-2 {
+    animation: ringRotate2 18s linear infinite;
+  }
+}
+
+@keyframes vaultFloat {
+  0%, 100% { transform: translateY(0px) rotateX(5deg) rotateY(-15deg); }
+  50% { transform: translateY(-8px) rotateX(5deg) rotateY(-15deg); }
+}
+@keyframes ringRotate {
+  from { transform: rotateX(70deg) rotateZ(0deg); }
+  to { transform: rotateX(70deg) rotateZ(360deg); }
+}
+@keyframes ringRotate2 {
+  from { transform: rotateX(50deg) rotateZ(180deg); }
+  to { transform: rotateX(50deg) rotateZ(-180deg); }
+}
+
+/* Gradient text utility */
+.text-gradient-violet {
+  background: linear-gradient(135deg, #A78BFA 0%, #22D3EE 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.text-gradient-cyan {
+  background: linear-gradient(135deg, #22D3EE 0%, #34D399 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Subtle surface glow on cards */
+.glow-violet-card {
+  box-shadow: 0 0 0 1px rgba(139,92,246,0.15), 0 4px 24px rgba(139,92,246,0.08);
+}
+.glow-cyan-card {
+  box-shadow: 0 0 0 1px rgba(34,211,238,0.12), 0 4px 20px rgba(34,211,238,0.06);
 }

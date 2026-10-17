@@ -5,12 +5,11 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import {
   LayoutDashboard,
-  Cpu,
-  Inbox,
-  ShieldAlert,
+  Sparkles,
+  FileText,
+  Shield,
   GitCommit,
   BarChart3,
-  Flame,
   MessageSquare,
   CheckCircle2
 } from 'lucide-react';
@@ -21,33 +20,41 @@ export const Navigation: React.FC = () => {
   const pathname = usePathname();
 
   const links = [
-    { name: 'Overview', href: '/', icon: LayoutDashboard },
-    { name: 'Decision Feed', href: '/decision-feed', icon: Cpu },
-    { name: 'Intake Queue', href: '/intake', icon: Inbox },
+    { name: 'Overview', href: '/dashboard', icon: LayoutDashboard },
+    { name: 'Decisions', href: '/decision-feed', icon: Sparkles },
+    { name: 'Invoices', href: '/intake', icon: FileText },
     { name: 'Approvals', href: '/approvals', icon: CheckCircle2 },
-    { name: 'Attack Lab', href: '/attack-lab', icon: ShieldAlert },
-    { name: 'Verify Ledger', href: '/verify-ledger', icon: GitCommit },
-    { name: 'Benchmark', href: '/benchmark', icon: BarChart3 },
-    { name: 'Traction', href: '/traction', icon: Flame },
-    { name: 'Ask Treasurer', href: '/ask-treasurer', icon: MessageSquare }
+    { name: 'Security', href: '/attack-lab', icon: Shield },
+    { name: 'Audit Trail', href: '/verify-ledger', icon: GitCommit },
+    { name: 'Reports', href: '/traction', icon: BarChart3 },
+    { name: 'Ask Euthyna', href: '/ask-treasurer', icon: MessageSquare }
   ];
 
   return (
-    <header className="border-b border-gray-800 bg-gray-950/60 backdrop-blur sticky top-[45px] z-40">
+    <header
+      className="sticky top-0 z-40 backdrop-blur-md"
+      style={{ background: 'rgba(16,21,34,0.85)', borderBottom: '1px solid rgba(255,255,255,0.06)' }}
+    >
       <div className="max-w-7xl mx-auto px-4 flex items-center justify-between h-14">
         {/* Logo and Brand */}
-        <Link href="/" className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-blue-600 via-indigo-500 to-cyan-400 flex items-center justify-center shadow-md font-bold text-white text-base">
+        <Link href="/dashboard" className="flex items-center gap-2.5">
+          <div
+            className="w-8 h-8 rounded-xl flex items-center justify-center font-bold text-white text-base shadow-md"
+            style={{ background: 'linear-gradient(135deg, #8B5CF6 0%, #22D3EE 100%)' }}
+          >
             E
           </div>
           <div>
             <div className="flex items-center gap-1.5">
-              <span className="font-bold text-white tracking-tight">Euthyna</span>
-              <span className="text-[10px] uppercase font-mono px-1.5 py-0.2 rounded bg-blue-500/20 text-blue-400 border border-blue-500/30">
+              <span className="font-bold tracking-tight" style={{ color: '#F0F4FF' }}>Euthyna</span>
+              <span
+                className="text-[10px] uppercase font-mono px-1.5 py-0.2 rounded"
+                style={{ background: 'rgba(139,92,246,0.15)', color: '#A78BFA', border: '1px solid rgba(139,92,246,0.25)' }}
+              >
                 Treasury
               </span>
             </div>
-            <div className="text-[10px] text-gray-400 font-mono -mt-0.5">Arc USDC Vault & Witness</div>
+            <div className="text-[10px] font-mono -mt-0.5" style={{ color: '#4A5568' }}>Arc USDC Vault</div>
           </div>
         </Link>
 
@@ -60,11 +67,12 @@ export const Navigation: React.FC = () => {
               <Link
                 key={item.href}
                 href={item.href}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium transition-all ${
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium transition-all"
+                style={
                   isActive
-                    ? 'bg-blue-600/20 text-blue-400 border border-blue-500/30'
-                    : 'text-gray-400 hover:text-gray-200 hover:bg-gray-900/60'
-                }`}
+                    ? { background: 'rgba(139,92,246,0.15)', color: '#A78BFA', border: '1px solid rgba(139,92,246,0.25)' }
+                    : { color: '#8B95B0' }
+                }
               >
                 <Icon className="w-3.5 h-3.5" />
                 <span>{item.name}</span>
@@ -75,9 +83,12 @@ export const Navigation: React.FC = () => {
 
         {/* Right Info Pill & Wallet Connection */}
         <div className="flex items-center gap-2.5 text-xs font-mono">
-          <div className="hidden lg:flex items-center gap-1.5 px-2.5 py-1 rounded bg-gray-900 border border-gray-800 text-gray-300">
-            <span className="text-gray-500">Gas:</span>
-            <span className="text-emerald-400">Sponsored</span>
+          <div
+            className="hidden lg:flex items-center gap-1.5 px-2.5 py-1 rounded-full"
+            style={{ background: 'rgba(16,185,129,0.08)', border: '1px solid rgba(16,185,129,0.18)', color: '#34D399' }}
+          >
+            <span style={{ color: '#4A5568' }}>Gas:</span>
+            <span>Sponsored</span>
           </div>
 
           <WalletButton />
@@ -86,4 +97,3 @@ export const Navigation: React.FC = () => {
     </header>
   );
 };
-

@@ -5,13 +5,7 @@ import {
   MessageSquare,
   Send,
   Sparkles,
-  Shield,
-  HelpCircle,
-  FileText,
-  CheckCircle2,
-  Bookmark
 } from 'lucide-react';
-import { EuthynaLogo } from '../../components/EuthynaLogo';
 
 interface ChatMessage {
   sender: 'USER' | 'TREASURER';
@@ -58,105 +52,103 @@ export default function AskTreasurerPage() {
     let citations: string[] = ['Ledger Chain Digest', 'EuthynaVault Arc Policy'];
 
     if (lower.includes('aws') || lower.includes('cloud')) {
-      replyText =
-        'AWS Cloud Hosting was paid on its exact due date (Day 3). Its terms were Net 15 with 0% early discount. Paying before Day 3 would only lose yield in the SimYield venue without economic benefit. Paying on Day 3 satisfies the obligation and avoids late fees.';
-      citations.push('Ledger Seq #13', 'Rule G2 (Unpaid Due Date)');
-    } else if (lower.includes('reserve') || lower.includes('floor')) {
-      replyText =
-        'The $3,000 reserve floor is physically enforced by the EuthynaVault smart contract on Arc (Rule G6). Even if an LLM is prompt injected or hallucinates, the contract reverts any discretionary payment that would leave liquid USDC below $3,000. Mandatory payments (like payroll) may use the reserve, but early discounts cannot.';
-      citations.push('EuthynaVault.sol:line 272', 'Rule G6 (Reserve Protection)');
-    } else if (lower.includes('payroll') || lower.includes('redeem')) {
-      replyText =
-        'On Day 12, the expected customer receivable of $2,500 had not arrived. Because payroll ($4,000) was due on Day 14 and the SimYield venue has a T+1 redemption delay, the planner initiated a proactive $1,000 redemption on Day 12 to guarantee liquidity before the due date.';
-      citations.push('Ledger Seq #15', 'Rule G9 (Redemption Lead Time)');
+      replyText = 'The AWS Cloud hosting invoice ($450.00) carries standard Net 30 terms with 0% early discount. Paying early would forfeit treasury yield interest. Euthyna waited until the exact due date (Day 3) to disburse payment, maximizing vault yield with zero late fees.';
+      citations = ['Ledger Seq #18', 'Rule G2 (Unpaid Due Date)'];
+    } else if (lower.includes('reserve') || lower.includes('floor') || lower.includes('3,000')) {
+      replyText = 'The $3,000 reserve floor is a hard mathematical constraint enforced by Rule G6 in the EuthynaVault smart contract. Any outbound transaction that would drop the available treasury balance below $3,000 is physically reverted on Arc Testnet.';
+      citations = ['EuthynaVault Contract #5042002', 'Rule G6 (Hard Reserve Floor)'];
+    } else if (lower.includes('figma') || lower.includes('day 10')) {
+      replyText = 'Figma terms 2/10 Net 30 offered $30 discount. Paying on Day 10 instead of Day 0 kept the cash compounding in yield for 10 full days while capturing the 2% discount right before expiration.';
+      citations = ['Rule G4 (Discount Optimization)'];
     } else {
-      replyText = `Based on the onchain ledger state for Studio A, current liquidity is $5,500.00 USDC, reserve floor is $3,000.00 USDC, and $4,500.00 USDC is earning 5.20% APR. All actions pass the 14 deterministic policy gate rules and are verified against Arc Testnet anchors.`;
-      citations.push('Snapshot Digest L=5500, R=3000');
+      replyText = `Based on your treasury state, all obligations are validated against the 14 deterministic policy gates before execution. Outbound payments require either full allowlist verification or Owner signoff.`;
     }
 
-    const botMsg: ChatMessage = {
+    const aiMsg: ChatMessage = {
       sender: 'TREASURER',
       text: replyText,
       citations
     };
 
-    setMessages(prev => [...prev, userMsg, botMsg]);
+    setMessages(prev => [...prev, userMsg, aiMsg]);
     setInput('');
   };
 
   return (
-    <div className="space-y-6">
-      {/* Header Bar */}
-      <div className="p-5 rounded-xl bg-white border border-slate-200/90 shadow-subtle flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+    <div className="space-y-6 max-w-4xl">
+      {/* Header */}
+      <div
+        className="p-5 rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-4"
+        style={{ background: '#141A27', border: '1px solid rgba(255,255,255,0.08)' }}
+      >
         <div>
-          <h2 className="text-base font-bold text-slate-900">
-            Ask Euthyna: Natural Language Treasury Explanations
-          </h2>
-          <p className="text-xs text-slate-500 mt-1">
-            Plain-English reasoning grounded directly in cryptographically signed ledger hashes and onchain contract state.
+          <div className="flex items-center gap-2">
+            <MessageSquare className="w-4 h-4 text-violet-400" />
+            <h2 className="text-base font-bold" style={{ color: '#F0F4FF' }}>
+              Ask Euthyna AI Treasurer
+            </h2>
+          </div>
+          <p className="text-xs mt-1" style={{ color: '#8B95B0' }}>
+            Auditable plain-English explanations backed by cryptographic ledger citations and policy proofs.
           </p>
         </div>
-
-        <div className="flex items-center gap-2">
-          <span className="px-2.5 py-1 rounded-md text-xs font-semibold bg-blue-50 text-blue-700 border border-blue-200 flex items-center gap-1">
-            <Sparkles className="w-3.5 h-3.5" />
-            <span>Grounded in Audit Ledger</span>
-          </span>
-        </div>
       </div>
 
-      {/* Suggested Question Chips */}
-      <div className="space-y-2">
-        <div className="text-xs font-semibold text-slate-500 uppercase tracking-wider flex items-center gap-1.5">
-          <HelpCircle className="w-3.5 h-3.5" />
-          <span>Suggested Questions:</span>
-        </div>
-        <div className="flex flex-wrap gap-2">
-          {PROMPT_CHIPS.map((chip, idx) => (
-            <button
-              key={idx}
-              onClick={() => handleSend(chip)}
-              className="px-3 py-1.5 rounded-lg bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 text-xs font-medium transition-all shadow-2xs hover:border-slate-300 text-left"
-            >
-              {chip}
-            </button>
-          ))}
-        </div>
+      {/* Suggested Prompt Chips */}
+      <div className="flex items-center gap-2 flex-wrap">
+        {PROMPT_CHIPS.map((chip, idx) => (
+          <button
+            key={idx}
+            onClick={() => handleSend(chip)}
+            className="text-[11px] px-3 py-1.5 rounded-xl text-left transition-all hover:bg-white/[0.04]"
+            style={{ background: '#141A27', border: '1px solid rgba(255,255,255,0.08)', color: '#8B95B0' }}
+          >
+            {chip}
+          </button>
+        ))}
       </div>
 
-      {/* Chat Messages Container */}
-      <div className="p-6 rounded-xl bg-white border border-slate-200/90 shadow-subtle min-h-[420px] flex flex-col justify-between space-y-6">
-        <div className="space-y-4 overflow-y-auto max-h-[500px] pr-2">
-          {messages.map((m, idx) => (
+      {/* Chat Messages */}
+      <div
+        className="p-6 rounded-2xl space-y-4 min-h-[420px] max-h-[560px] overflow-y-auto"
+        style={{ background: '#141A27', border: '1px solid rgba(255,255,255,0.08)' }}
+      >
+        {messages.map((m, idx) => {
+          const isUser = m.sender === 'USER';
+
+          return (
             <div
               key={idx}
-              className={`flex gap-3 ${m.sender === 'USER' ? 'justify-end' : 'justify-start'}`}
+              className={`flex flex-col ${isUser ? 'items-end' : 'items-start'} space-y-1.5`}
             >
-              {m.sender === 'TREASURER' && (
-                <div className="w-8 h-8 rounded-lg bg-blue-50 border border-blue-200 flex items-center justify-center shrink-0 mt-0.5">
-                  <EuthynaLogo size="sm" />
-                </div>
-              )}
-
               <div
-                className={`max-w-2xl p-4 rounded-2xl text-xs leading-relaxed space-y-2 shadow-xs ${
-                  m.sender === 'USER'
-                    ? 'bg-blue-600 text-white rounded-br-sm'
-                    : 'bg-slate-50 text-slate-800 border border-slate-200/80 rounded-bl-sm'
+                className={`max-w-xl p-4 rounded-2xl text-xs leading-relaxed ${
+                  isUser
+                    ? 'text-white'
+                    : 'text-slate-200'
                 }`}
+                style={
+                  isUser
+                    ? { background: '#8B5CF6', boxShadow: '0 0 16px rgba(139,92,246,0.25)' }
+                    : { background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)' }
+                }
               >
-                <div className="font-sans whitespace-pre-wrap">{m.text}</div>
+                {!isUser && (
+                  <div className="flex items-center gap-1.5 font-bold mb-1.5" style={{ color: '#22D3EE' }}>
+                    <Sparkles className="w-3.5 h-3.5" />
+                    <span>Euthyna Policy Engine</span>
+                  </div>
+                )}
+                <p>{m.text}</p>
 
-                {m.citations && m.citations.length > 0 && (
-                  <div className="pt-2 border-t border-slate-200/60 flex flex-wrap gap-1.5 text-[10px]">
-                    <span className="text-slate-400 font-semibold uppercase flex items-center gap-0.5">
-                      <Bookmark className="w-2.5 h-2.5" />
-                      Citations:
-                    </span>
+                {m.citations && (
+                  <div className="mt-2.5 pt-2 flex items-center gap-1.5 flex-wrap" style={{ borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+                    <span className="text-[10px] font-semibold" style={{ color: '#4A5568' }}>Citations:</span>
                     {m.citations.map((c, i) => (
                       <span
                         key={i}
-                        className="px-2 py-0.5 rounded bg-white text-slate-600 border border-slate-200 font-mono font-medium"
+                        className="text-[10px] font-mono px-1.5 py-0.5 rounded"
+                        style={{ background: 'rgba(139,92,246,0.12)', color: '#A78BFA', border: '1px solid rgba(139,92,246,0.25)' }}
                       >
                         {c}
                       </span>
@@ -165,36 +157,36 @@ export default function AskTreasurerPage() {
                 )}
               </div>
             </div>
-          ))}
-        </div>
-
-        {/* Input Bar */}
-        <div className="pt-4 border-t border-slate-100">
-          <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              handleSend();
-            }}
-            className="flex items-center gap-2"
-          >
-            <input
-              type="text"
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              placeholder="Ask why a payment was made, explain discount calculus, or query the reserve floor..."
-              className="flex-1 px-4 py-2.5 rounded-xl border border-slate-200 text-xs text-slate-900 bg-slate-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-            />
-            <button
-              type="submit"
-              disabled={!input.trim()}
-              className="px-4 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white text-xs font-semibold shadow-xs transition-all flex items-center gap-1.5 shrink-0"
-            >
-              <span>Ask</span>
-              <Send className="w-3.5 h-3.5" />
-            </button>
-          </form>
-        </div>
+          );
+        })}
       </div>
+
+      {/* Input Bar */}
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          handleSend();
+        }}
+        className="flex items-center gap-2 p-2 rounded-2xl"
+        style={{ background: '#141A27', border: '1px solid rgba(255,255,255,0.08)' }}
+      >
+        <input
+          type="text"
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          placeholder="Ask why a payment was timed, delayed, or swept..."
+          className="flex-1 bg-transparent px-4 py-2 text-xs focus:outline-none"
+          style={{ color: '#F0F4FF' }}
+        />
+        <button
+          type="submit"
+          disabled={!input.trim()}
+          className="p-2.5 rounded-xl text-white transition-all disabled:opacity-30 active:scale-95"
+          style={{ background: '#8B5CF6', boxShadow: '0 0 12px rgba(139,92,246,0.3)' }}
+        >
+          <Send className="w-3.5 h-3.5" />
+        </button>
+      </form>
     </div>
   );
 }
