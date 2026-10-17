@@ -7,6 +7,7 @@ import {
   defineChain,
   parseAbi,
   getAddress,
+  parseUnits,
   type PublicClient,
   type WalletClient,
   type Address,
@@ -399,6 +400,53 @@ export async function deployVaultViaMetaMask(
     blockNumber: receipt.blockNumber,
     status: receipt.status === 'success' ? 'success' : 'reverted',
     explorerUrl: `${ARC_EXPLORER_URL}/address/${receipt.contractAddress}`
+  };
+}
+
+export async function executeLiveUsdcTransfer(
+  walletClient: WalletClient,
+  account: Address,
+  recipient: Address,
+  amountUsdc: string,
+  mode: 'deposit_vault' | 'direct_payee' = 'deposit_vault'
+): Promise<TxResult> {
+  const publicClient = getPublicClient();
+  const validRecipient = getAddress(recipient.toLowerCase()) as Address;
+  const numAmount = parseFloat(amountUsdc);
+  if (isNaN(numAmount) || numAmount < 1.0) {
+    throw new Error('Minimum transaction amount is 1.00 USDC');
+  }
+
+  let hash: Hash;
+  if (mode === 'deposit_vault') {
+    // Deposit directly into the Vault using the official Arc USDC ERC20 precompile
+    const usdcUnits = parseUnits(amountUsdc, 6);
+    hash = await walletClient.writeContract({
+      account,
+      chain: arcTestnetChain,
+      address: USDC_ADDRESS,
+      abi: IERC20_ABI,
+      functionName: 'transfer',
+      args: [validRecipient, usdcUnits]
+    });
+  } else {
+    // Transfer native USDC to recipient address on Arc Testnet
+    const nativeUnits = parseUnits(amountUsdc, 18);
+    hash = await walletClient.sendTransaction({
+      account,
+      chain: arcTestnetChain,
+      to: validRecipient,
+      value: nativeUnits
+    });
+  }
+
+  const receipt = await publicClient.waitForTransactionReceipt({ hash });
+  return {
+    hash,
+    receipt,
+    blockNumber: receipt.blockNumber,
+    status: receipt.status === 'success' ? 'success' : 'reverted',
+    explorerUrl: `${ARC_EXPLORER_URL}/tx/${hash}`
   };
 }
 

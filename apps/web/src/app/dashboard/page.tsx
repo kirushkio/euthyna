@@ -402,6 +402,14 @@ export default function DashboardPage() {
             Demo Data
           </span>
           <Link
+            href="/approvals"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all text-white active:scale-95"
+            style={{ background: 'linear-gradient(135deg, #8B5CF6 0%, #06B6D4 100%)', boxShadow: '0 0 16px rgba(139,92,246,0.35)' }}
+          >
+            <Zap className="w-3.5 h-3.5" />
+            <span>Send 1.00 USDC (Live Test)</span>
+          </Link>
+          <Link
             href="/intake"
             className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold transition-all"
             style={{ background: 'rgba(139,92,246,0.12)', color: '#A78BFA', border: '1px solid rgba(139,92,246,0.20)' }}
