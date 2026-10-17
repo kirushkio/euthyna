@@ -36,37 +36,14 @@ export const AppShell: React.FC<AppShellProps> = ({ children }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [showHowItWorksModal, setShowHowItWorksModal] = useState(false);
 
-  const isPublicPage = pathname === '/' || pathname === '/login';
-
-  useEffect(() => {
-    if (!isConnecting && !isConnected && !isPublicPage) {
-      router.replace('/');
-    }
-  }, [isConnected, isConnecting, isPublicPage, router]);
+  const isLoginPage = pathname === '/login';
 
   const handleDisconnect = async () => {
     await disconnect();
-    router.replace('/');
   };
 
-  if (isPublicPage) {
+  if (isLoginPage) {
     return <>{children}</>;
-  }
-
-  if (!isConnected) {
-    return (
-      <div className="min-h-screen flex flex-col items-center justify-center p-4" style={{ background: '#080B12' }}>
-        <div className="flex flex-col items-center gap-4">
-          <div className="w-12 h-12 rounded-2xl flex items-center justify-center font-bold text-white text-xl" style={{ background: 'linear-gradient(135deg, #8B5CF6, #22D3EE)' }}>
-            E
-          </div>
-          <div className="flex items-center gap-2 text-xs" style={{ color: '#8B95B0' }}>
-            <Loader2 className="w-3.5 h-3.5 animate-spin" style={{ color: '#8B5CF6' }} />
-            <span>Connect wallet to access treasury…</span>
-          </div>
-        </div>
-      </div>
-    );
   }
 
   const navItems = [
@@ -81,7 +58,7 @@ export const AppShell: React.FC<AppShellProps> = ({ children }) => {
   ];
 
   const getPageTitle = (path: string) => {
-    if (path.startsWith('/dashboard')) return 'Treasury Overview';
+    if (path === '/' || path.startsWith('/dashboard')) return 'Treasury Overview';
     if (path.startsWith('/decision-feed')) return 'AI Decisions';
     if (path.startsWith('/intake')) return 'Invoices';
     if (path.startsWith('/approvals')) return 'Approvals';
